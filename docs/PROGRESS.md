@@ -6,7 +6,7 @@ Dokumen hidup. Diperbarui di **akhir setiap sesi** supaya sesi berikutnya (oleh 
 
 Tanggal: 2026-11-16
 
-T-001 sampai T-007 sudah ter-merge ke `main`. T-008 (Pelanggan 2D dan dialog pesanan) selesai dikerjakan di branch `feat/T-008-pelanggan-dialog` dan berstatus `review`. Ilustrasi pelanggan 2D gaya visual novel (SVG mandiri di `public/`) beserta kotak dialog yang menyebut tepat satu menu dengan kalimat santai dan atribut alt aksesibel telah terpasang dan teruji.
+T-001 sampai T-008 sudah ter-merge ke `main`. T-009 (Scene 3D alat dan bahan) selesai dikerjakan di branch `feat/T-009-scene-3d` dan berstatus `review`. Scene Three.js dapur menampilkan 7 alat dan 9 bahan 3D prosedural di atas meja dapur, dengan pencahayaan, raycaster untuk interaksi hover dan seleksi/klik, serta kontrol jeda (Pause) yang terintegrasi ke game container.
 
 ## Completed
 
@@ -20,16 +20,17 @@ T-001 sampai T-007 sudah ter-merge ke `main`. T-008 (Pelanggan 2D dan dialog pes
 | 2026-11-16 | T-005 State game, aturan 10 pelanggan, dan uang | PR #11 | State alur 10 pelanggan, menang/kalah, dan uang |
 | 2026-11-16 | T-006 Halaman awal, Start, dan layar hasil | PR #12 | Layar awal, Start, layar hasil menang/kalah, dan tombol Main lagi |
 | 2026-11-16 | T-007 HUD, Pause, dan Resume di layar | PR #13 | HUD timer, nomor pelanggan, uang, dan tombol Pause/Resume |
+| 2026-11-16 | T-008 Pelanggan 2D dan dialog pesanan | PR #14 | Pelanggan 2D visual novel statis, balon dialog, dan alt text |
 
 ## In Progress
 
-T-008 Pelanggan 2D dan dialog pesanan (status `review`, PR siap diajukan). Berkas: `src/ui/customer-dialog.js`, `public/customer-*.svg`, `src/styles/main.css`, `src/main.js`, `tests/customer-dialog.test.js`, dan `tests/app-integration.test.js`.
+T-009 Scene 3D alat dan bahan (status `review`, PR siap diajukan). Berkas: `src/scene/kitchen-scene.js`, `src/styles/main.css`, `src/main.js`, dan `tests/kitchen-scene.test.js`.
 
 ## Next Up
 
-1. T-009: Scene 3D alat dan bahan
-2. T-010: Interaksi alat, bahan, dan proses 3 detik
-3. T-011: Tombol Sajikan dan alur penilaian di layar
+1. T-010: Interaksi alat, bahan, dan proses 3 detik
+2. T-011: Tombol Sajikan dan alur penilaian di layar
+3. T-012: Panel petunjuk selalu tampil
 
 ## Blockers
 

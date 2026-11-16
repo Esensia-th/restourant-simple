@@ -19,11 +19,17 @@ import {
 } from './ui/screens.js';
 import { renderHUD } from './ui/hud.js';
 import { renderCustomerDialog } from './ui/customer-dialog.js';
+import { initKitchenScene } from './scene/kitchen-scene.js';
 
 /**
  * State aplikasi lokal di memori.
  */
 let state = createGameState();
+
+/**
+ * Kontroler Three.js scene aktif.
+ */
+let kitchenSceneController = null;
 
 /**
  * ID requestAnimationFrame untuk game loop.
@@ -66,6 +72,10 @@ function stopGameLoop() {
   if (animationFrameId !== null) {
     cancelAnimationFrame(animationFrameId);
     animationFrameId = null;
+  }
+  if (kitchenSceneController) {
+    kitchenSceneController.destroy();
+    kitchenSceneController = null;
   }
 }
 
@@ -147,7 +157,50 @@ function renderApp(root) {
       gameContainer.appendChild(customerDialog);
     }
 
+    // Scene 3D Alat dan Bahan (F3)
+    const sceneContainer = document.createElement('div');
+    sceneContainer.className = 'scene-container';
+    sceneContainer.setAttribute('data-testid', 'scene-container');
+
+    const canvas = document.createElement('canvas');
+    canvas.className = 'scene-canvas';
+    canvas.setAttribute('data-testid', 'scene-canvas');
+    canvas.setAttribute('aria-label', 'Area Dapur 3D: Alat dan Bahan');
+    sceneContainer.appendChild(canvas);
+
+    const statusBar = document.createElement('div');
+    statusBar.className = 'scene-status-bar';
+    const statusHint = document.createElement('span');
+    statusHint.textContent = 'Arahkan kursor atau sentuh alat & bahan 3D';
+    const statusItem = document.createElement('span');
+    statusItem.className = 'scene-status-item';
+    statusItem.setAttribute('data-testid', 'scene-status-item');
+    statusBar.appendChild(statusHint);
+    statusBar.appendChild(statusItem);
+    sceneContainer.appendChild(statusBar);
+
+    gameContainer.appendChild(sceneContainer);
     root.appendChild(gameContainer);
+
+    // Inisialisasi Scene Three.js
+    if (!kitchenSceneController) {
+      kitchenSceneController = initKitchenScene(canvas, {
+        onHover: (item) => {
+          if (item) {
+            statusItem.textContent = `${item.name} (${item.type === 'tool' ? 'Alat' : 'Bahan'})`;
+          } else {
+            statusItem.textContent = '';
+          }
+        },
+        onSelect: (item) => {
+          statusItem.textContent = `Dipilih: ${item.name}`;
+        },
+      });
+    }
+
+    if (kitchenSceneController) {
+      kitchenSceneController.setPaused(state.paused);
+    }
   }
 }
 
