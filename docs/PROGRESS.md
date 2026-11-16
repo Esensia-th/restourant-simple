@@ -6,7 +6,7 @@ Dokumen hidup. Diperbarui di **akhir setiap sesi** supaya sesi berikutnya (oleh 
 
 Tanggal: 2026-11-16
 
-T-001 sampai T-004 sudah ter-merge ke `main`. T-005 (state game, aturan 10 pelanggan, dan uang) selesai dikerjakan di branch `feat/T-005-state-game` dan menunggu pull request, CI, dan merge. Logika game di `src/game/` (katalog, timer, penilaian, state) kini lengkap dan teruji; berikutnya tampilan (T-006 dan seterusnya). Vitest 5.1.0 (PR #5), `npm audit` bersih. Pekerjaan dilakukan dari `C:\dev\restourant-simple` (di luar OneDrive).
+T-001 sampai T-005 sudah ter-merge ke `main`. T-006 (halaman awal, Start, dan layar hasil) selesai dikerjakan di branch `feat/T-006-halaman-awal-hasil` dan berstatus `review`. Tampilan awal, transisi Start ke pelanggan 1/10, layar hasil menang/kalah, format mata uang rupiah, dan tombol Main lagi lengkap dengan pengujian komponen dan integrasi.
 
 ## Completed
 
@@ -16,17 +16,18 @@ T-001 sampai T-004 sudah ter-merge ke `main`. T-005 (state game, aturan 10 pelan
 | 2026-11-16 | Pembaruan vitest ke 5.1.0 | PR #5 (Dependabot) | Menutup 3 temuan `npm audit` (1 moderate, 2 critical) |
 | 2026-11-16 | T-002 Katalog menu dan data petunjuk | PR #8 | 10 menu persis SPEC dan tesnya |
 | 2026-11-16 | T-003 Logika timer dan jam permainan | PR #9 | Timer 30 detik, proses 3 detik, Pause/Resume, timer habis membatalkan proses |
-| 2026-11-16 | T-004 Penilaian hidangan | (isi nomor PR setelah merge) | Hidangan benar bila bahan, proses, dan urutan persis resep |
+| 2026-11-16 | T-004 Penilaian hidangan | PR #10 | Hidangan benar bila bahan, proses, dan urutan persis resep |
+| 2026-11-16 | T-005 State game, aturan 10 pelanggan, dan uang | PR #11 | State alur 10 pelanggan, menang/kalah, dan uang |
 
 ## In Progress
 
-T-005 State game, aturan 10 pelanggan, dan uang (status `review`, PR belum dibuka). Berkas: `src/game/game-state.js` dan `tests/game-state.test.js`.
+T-006 Halaman awal, Start, dan layar hasil (status `review`, PR siap diajukan). Berkas: `src/ui/screens.js`, `src/styles/main.css`, `src/main.js`, `tests/screens.test.js`, dan `tests/app-integration.test.js`.
 
 ## Next Up
 
-1. T-006: Halaman awal, Start, dan layar hasil
-2. T-007: HUD, Pause, dan Resume di layar
-3. T-008: Pelanggan 2D dan dialog pesanan
+1. T-007: HUD, Pause, dan Resume di layar
+2. T-008: Pelanggan 2D dan dialog pesanan
+3. T-009: Scene 3D alat dan bahan
 
 ## Blockers
 

@@ -65,7 +65,7 @@ Isi satu baris setiap selesai menguji sebuah fitur satu putaran penuh (Start →
 
 | Tanggal | Task | Fitur | Menu yang dimainkan | Hasil | Error di konsol | Catatan |
 |---|---|---|---|---|---|---|
-| - | - | - | - | - | - | Belum ada pengujian |
+| 2026-11-16 | T-006 | F1, F2 | M01 (Telur Goreng) | Sukses | Tidak ada | Layar awal tampil dengan tombol Start; klik Start berpindah ke pelanggan 1/10 dengan uang Rp0; layar hasil menang dan kalah menampilkan total uang dan tombol Main lagi yang mengembalikan permainan ke pelanggan 1/10 |
 
 ## AI-Generated Code Checks
 

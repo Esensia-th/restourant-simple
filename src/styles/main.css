@@ -22,6 +22,12 @@
   --space-4: 16px;
   --space-6: 24px;
   --space-8: 32px;
+
+  --font-size-title: 32px;
+  --font-size-subtitle: 22px;
+  --font-size-body: 16px;
+  --font-size-caption: 14px;
+  --font-size-hud: 24px;
 }
 
 *,
@@ -46,6 +52,132 @@ body {
   justify-content: center;
   min-height: 100vh;
   padding: var(--space-4);
+  width: 100%;
+}
+
+/* Komponen Layar & Kartu */
+.screen {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 600px;
+}
+
+.card {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: var(--space-6);
+  text-align: center;
+  width: 100%;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+}
+
+.screen-title {
+  font-size: var(--font-size-title);
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: var(--space-2);
+}
+
+.screen-subtitle {
+  font-size: var(--font-size-subtitle);
+  font-weight: 600;
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-4);
+}
+
+.screen-desc {
+  font-size: var(--font-size-body);
+  color: var(--color-text);
+  margin-bottom: var(--space-6);
+}
+
+/* Hasil Menang/Kalah */
+.text-success {
+  color: var(--color-success);
+}
+
+.text-danger {
+  color: var(--color-danger);
+}
+
+.result-money-box {
+  background-color: var(--color-bg);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 6px;
+  padding: var(--space-4);
+  margin-bottom: var(--space-6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.result-money-label {
+  font-size: var(--font-size-body);
+  color: var(--color-text-muted);
+}
+
+.result-money-value {
+  font-size: var(--font-size-hud);
+  font-weight: 700;
+  color: var(--color-success);
+}
+
+/* Komponen Tombol */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: inherit;
+  font-size: var(--font-size-body);
+  font-weight: 600;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  text-decoration: none;
+  min-height: 44px;
+  min-width: 44px;
+  padding: var(--space-2) var(--space-6);
+  transition: background-color 150ms ease-out, border-color 150ms ease-out;
+}
+
+.btn-primary {
+  background-color: var(--color-primary);
+  color: #FFFFFF;
+}
+
+.btn-primary:hover {
+  background-color: var(--color-primary-strong);
+}
+
+.btn-large {
+  padding: var(--space-3) var(--space-8);
+  font-size: 18px;
+}
+
+/* Layar Game Placeholder */
+.game-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 800px;
+  gap: var(--space-4);
+}
+
+.game-hud-placeholder {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: var(--space-4);
+  width: 100%;
+  text-align: center;
+  font-size: var(--font-size-hud);
+  font-weight: 700;
 }
 
 /* Fokus keyboard terlihat (WCAG 2.2 AA) */
