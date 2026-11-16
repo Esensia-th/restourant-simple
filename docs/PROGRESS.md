@@ -6,7 +6,7 @@ Dokumen hidup. Diperbarui di **akhir setiap sesi** supaya sesi berikutnya (oleh 
 
 Tanggal: 2026-11-16
 
-T-001 sampai T-008 sudah ter-merge ke `main`. T-009 (Scene 3D alat dan bahan) selesai dikerjakan di branch `feat/T-009-scene-3d` dan berstatus `review`. Scene Three.js dapur menampilkan 7 alat dan 9 bahan 3D prosedural di atas meja dapur, dengan pencahayaan, raycaster untuk interaksi hover dan seleksi/klik, serta kontrol jeda (Pause) yang terintegrasi ke game container.
+T-001 sampai T-009 sudah ter-merge ke `main`. T-010 (Interaksi alat, bahan, dan proses 3 detik) selesai dikerjakan di branch `feat/T-010-interaksi-proses` dan berstatus `review`. Callback `onSelect` dari scene Three.js disambungkan ke `selectIngredient`/`beginProcess` di `main.js`; bahan yang diklik ditandai hijau di scene; alat yang dipakai menampilkan indikator progress bar HTML selama 3 detik; proses berhenti otomatis saat Pause. Pemetaan alat → aksi (kompor/penggorengan → goreng, spatula → aduk, alat pembuat kopi → seduh, blender buah → blender, wadah es batu/galon air → tambah bahan).
 
 ## Completed
 
@@ -21,16 +21,17 @@ T-001 sampai T-008 sudah ter-merge ke `main`. T-009 (Scene 3D alat dan bahan) se
 | 2026-11-16 | T-006 Halaman awal, Start, dan layar hasil | PR #12 | Layar awal, Start, layar hasil menang/kalah, dan tombol Main lagi |
 | 2026-11-16 | T-007 HUD, Pause, dan Resume di layar | PR #13 | HUD timer, nomor pelanggan, uang, dan tombol Pause/Resume |
 | 2026-11-16 | T-008 Pelanggan 2D dan dialog pesanan | PR #14 | Pelanggan 2D visual novel statis, balon dialog, dan alt text |
+| 2026-11-16 | T-009 Scene 3D alat dan bahan | PR #15 | Scene Three.js 7 alat + 9 bahan prosedural, hover dan seleksi visual |
 
 ## In Progress
 
-T-009 Scene 3D alat dan bahan (status `review`, PR siap diajukan). Berkas: `src/scene/kitchen-scene.js`, `src/styles/main.css`, `src/main.js`, dan `tests/kitchen-scene.test.js`.
+T-010 Interaksi alat, bahan, dan proses 3 detik (status `review`, PR siap diajukan). Berkas: `src/main.js`, `src/scene/kitchen-scene.js`, `src/styles/main.css`, `tests/interaction.test.js`.
 
 ## Next Up
 
-1. T-010: Interaksi alat, bahan, dan proses 3 detik
-2. T-011: Tombol Sajikan dan alur penilaian di layar
-3. T-012: Panel petunjuk selalu tampil
+1. T-011: Tombol Sajikan dan alur penilaian di layar
+2. T-012: Panel petunjuk selalu tampil
+3. T-013: Penanganan error global
 
 ## Blockers
 
@@ -58,3 +59,5 @@ Format entri: `tanggal | siapa (manusia atau nama alat) | task | hasil | catatan
 2026-11-16 | manual (tanpa agen) | T-003 | timer dan proses 3 detik ter-merge (PR #9), tes lulus | lanjut T-004
 2026-11-16 | manual (kode dari asisten chat) | T-004 | penilaian hidangan dan tesnya ter-merge, tes lulus | lanjut T-005
 2026-11-16 | manual (kode dari asisten chat) | T-005 | state game dan tesnya selesai, lint/test/build lulus | lanjut T-006 (UI)
+2026-11-16 | Antigravity (agen) | T-006–T-009 | UI halaman awal/hasil, HUD, pelanggan 2D, scene 3D ter-merge ke main (PR #12–#15) | lanjut T-010
+2026-11-16 | Antigravity (agen) | T-010 | interaksi alat/bahan/proses disambungkan; 20 tes baru lulus; lint/test/build lulus | uji manual browser oleh mahasiswa diperlukan sebelum merge PR
