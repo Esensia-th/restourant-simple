@@ -13,6 +13,8 @@ import {
   tickGame,
   selectIngredient,
   beginProcess,
+  serve,
+  nextCustomer,
   TOTAL_CUSTOMERS,
 } from './game/game-state.js';
 import { getProcessProgress } from './game/timer.js';
@@ -68,6 +70,10 @@ let processBarFillEl = null;
 let processLabelEl = null;
 let dishWorkbenchStepsEl = null;
 let dishWorkbenchCountEl = null;
+let recipeGuideTitleEl = null;
+let recipeGuidePriceEl = null;
+let recipeGuideStepsEl = null;
+let sajikanBtnEl = null;
 
 /**
  * Pemetaan fallback alat 3D ke action proses (dari SPEC.json).
@@ -94,13 +100,41 @@ const TOOL_INGREDIENT_MAP = {
  * Menentukan aksi alat berdasarkan resep menu yang sedang dipesan pemain.
  * @param {string} toolId
  * @param {typeof state.order} order
+ * @param {Array} [currentDish=[]]
  * @returns {{ action: string, tool: string } | null}
  */
-function getToolActionForOrder(toolId, order) {
+function getToolActionForOrder(toolId, order, currentDish = []) {
   if (order && order.menuId) {
     const menu = MENU_CATALOG.find((m) => m.id === order.menuId);
     if (menu) {
-      // Cari apakah ada langkah proses menu ini yang cocok dengan alat yang diklik
+      // 1. Cek apakah langkah berikutnya yang diharapkan cocok dengan alat ini
+      const nextExpected = menu.steps[currentDish.length];
+      if (nextExpected && nextExpected.type === 'process') {
+        const matches = (toolId === 'kompor' || toolId === 'penggorengan')
+          ? nextExpected.tool.includes('kompor') || nextExpected.tool.includes('penggorengan')
+          : nextExpected.tool === toolId;
+        if (matches) {
+          return { action: nextExpected.action, tool: nextExpected.tool };
+        }
+      }
+
+      // 2. Cari langkah proses pada menu yang belum dilakukan oleh pemain
+      const unusedStep = menu.steps.find((s) => {
+        if (s.type !== 'process') return false;
+        const matches = (toolId === 'kompor' || toolId === 'penggorengan')
+          ? s.tool.includes('kompor') || s.tool.includes('penggorengan')
+          : s.tool === toolId;
+        if (!matches) return false;
+        const alreadyDone = currentDish.some(
+          (d) => d.type === 'process' && d.action === s.action && d.tool === s.tool
+        );
+        return !alreadyDone;
+      });
+      if (unusedStep) {
+        return { action: unusedStep.action, tool: unusedStep.tool };
+      }
+
+      // 3. Cari langkah proses apa saja pada menu ini yang cocok dengan alat
       const matchedStep = menu.steps.find((s) => {
         if (s.type !== 'process') return false;
         if (toolId === 'kompor' || toolId === 'penggorengan') {
@@ -154,7 +188,7 @@ function handleSceneSelect(item) {
     }
 
     // Jalankan proses
-    const processInfo = getToolActionForOrder(item.id, state.order);
+    const processInfo = getToolActionForOrder(item.id, state.order, state.dish);
     if (processInfo) {
       const next = beginProcess(state, processInfo);
       if (next !== state) {
@@ -313,6 +347,56 @@ function updateMainUI(currentState) {
       }
     }
   }
+
+  // 6. Perbarui Panel Petunjuk Resep (Recipe Guide, F5)
+  if (recipeGuideStepsEl && currentState.order && currentState.order.menuId) {
+    const menu = MENU_CATALOG.find((m) => m.id === currentState.order.menuId);
+    if (menu) {
+      if (recipeGuideTitleEl) {
+        recipeGuideTitleEl.textContent = `Resep: ${menu.name} (${menu.category === 'makanan' ? 'Makanan' : 'Minuman'})`;
+      }
+      if (recipeGuidePriceEl) {
+        recipeGuidePriceEl.textContent = formatRupiah(menu.price_idr);
+      }
+
+      recipeGuideStepsEl.textContent = '';
+      const currentDish = currentState.dish || [];
+
+      menu.steps.forEach((step, idx) => {
+        const stepEl = document.createElement('span');
+        const isDone = idx < currentDish.length;
+        const isCurrent = idx === currentDish.length;
+
+        stepEl.className = `recipe-step-item ${isDone ? 'is-done' : ''} ${isCurrent ? 'is-current' : ''}`;
+
+        let label = '';
+        if (step.type === 'ingredient') {
+          label = `${idx + 1}. Bahan: ${step.item}`;
+        } else {
+          label = `${idx + 1}. Proses: ${step.action} (${step.tool})`;
+        }
+
+        if (isDone) {
+          stepEl.textContent = `✓ ${label}`;
+        } else if (isCurrent) {
+          stepEl.textContent = `👉 ${label}`;
+        } else {
+          stepEl.textContent = label;
+        }
+
+        recipeGuideStepsEl.appendChild(stepEl);
+      });
+    }
+  }
+
+  // 7. Perbarui Tombol Sajikan (F2, T-011)
+  if (sajikanBtnEl) {
+    const canServe = !currentState.paused &&
+      currentState.order &&
+      currentState.order.status === 'menunggu' &&
+      !currentState.order.activeProcess;
+    sajikanBtnEl.disabled = !canServe;
+  }
 }
 
 /**
@@ -377,6 +461,10 @@ function stopGameLoop() {
   processLabelEl = null;
   dishWorkbenchStepsEl = null;
   dishWorkbenchCountEl = null;
+  recipeGuideTitleEl = null;
+  recipeGuidePriceEl = null;
+  recipeGuideStepsEl = null;
+  sajikanBtnEl = null;
 }
 
 /**
@@ -463,6 +551,75 @@ function mountMainScreen(root) {
 
   dishWorkbenchStepsEl = dishStepsContainer;
   dishWorkbenchCountEl = dishCount;
+
+  // Panel Petunjuk Resep (Recipe Guide, F5)
+  const recipeGuide = document.createElement('div');
+  recipeGuide.className = 'recipe-guide';
+  recipeGuide.setAttribute('data-testid', 'recipe-guide');
+
+  const recipeGuideHeader = document.createElement('div');
+  recipeGuideHeader.className = 'recipe-guide-header';
+  const recipeGuideTitle = document.createElement('span');
+  recipeGuideTitle.className = 'recipe-guide-title';
+  const recipeGuidePrice = document.createElement('span');
+  recipeGuidePrice.className = 'recipe-guide-price';
+  recipeGuideHeader.appendChild(recipeGuideTitle);
+  recipeGuideHeader.appendChild(recipeGuidePrice);
+  recipeGuide.appendChild(recipeGuideHeader);
+
+  const recipeGuideSteps = document.createElement('div');
+  recipeGuideSteps.className = 'recipe-guide-steps';
+  recipeGuideSteps.setAttribute('data-testid', 'recipe-guide-steps');
+  recipeGuide.appendChild(recipeGuideSteps);
+
+  gameContainer.appendChild(recipeGuide);
+
+  recipeGuideTitleEl = recipeGuideTitle;
+  recipeGuidePriceEl = recipeGuidePrice;
+  recipeGuideStepsEl = recipeGuideSteps;
+
+  // Tombol Sajikan (F2, T-011)
+  const sajikanContainer = document.createElement('div');
+  sajikanContainer.className = 'sajikan-container';
+  sajikanContainer.setAttribute('data-testid', 'sajikan-container');
+
+  const sajikanBtn = document.createElement('button');
+  sajikanBtn.type = 'button';
+  sajikanBtn.className = 'btn btn-primary btn-sajikan';
+  sajikanBtn.setAttribute('data-testid', 'btn-sajikan');
+  sajikanBtn.textContent = 'Sajikan';
+  sajikanBtn.addEventListener('click', () => {
+    if (state.paused || state.screen !== 'main') return;
+    if (!state.order || state.order.status !== 'menunggu') return;
+    if (state.order.activeProcess) return; // Masih ada proses berjalan
+
+    const served = serve(state);
+    if (served !== state) {
+      state = served;
+
+      if (state.screen === 'hasil') {
+        // Menang atau kalah, pindah ke layar hasil
+        const app = document.getElementById('app');
+        if (app) renderApp(app);
+        return;
+      }
+
+      // Pelanggan terlayani, pindah ke pelanggan berikutnya
+      if (state.order && state.order.status === 'terlayani') {
+        const nextMenuId = pickRandomMenuId();
+        state = nextCustomer(state, nextMenuId);
+      }
+
+      if (kitchenSceneController) {
+        kitchenSceneController.resetIngredientMarks();
+      }
+      updateMainUI(state);
+    }
+  });
+
+  sajikanContainer.appendChild(sajikanBtn);
+  gameContainer.appendChild(sajikanContainer);
+  sajikanBtnEl = sajikanBtn;
 
   // Scene 3D Alat dan Bahan (F3)
   const sceneContainer = document.createElement('div');

@@ -424,6 +424,88 @@ body {
   min-width: 110px;
 }
 
+/* Panel Petunjuk Resep (F5) */
+.recipe-guide {
+  width: 100%;
+  background-color: #FFFFFF;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: var(--space-3) var(--space-4);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.recipe-guide-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-2);
+}
+
+.recipe-guide-title {
+  font-weight: 700;
+  font-size: var(--font-size-body);
+  color: var(--color-text);
+}
+
+.recipe-guide-price {
+  font-weight: 600;
+  color: var(--color-primary);
+  font-size: var(--font-size-caption);
+}
+
+.recipe-guide-steps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.recipe-step-item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  font-size: var(--font-size-caption);
+  padding: 4px 8px;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 6px;
+  color: var(--color-text-muted);
+}
+
+.recipe-step-item.is-done {
+  background-color: #ECFDF5;
+  border-color: #10B981;
+  color: #065F46;
+  font-weight: 600;
+}
+
+.recipe-step-item.is-current {
+  background-color: #EFF6FF;
+  border-color: #3B82F6;
+  color: #1E40AF;
+  font-weight: 700;
+  box-shadow: 0 0 0 1px #3B82F6;
+}
+
+.recipe-step-num {
+  font-weight: 700;
+}
+
+/* Kontainer dan Tombol Sajikan (F2, T-011) */
+.sajikan-container {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.btn-sajikan {
+  min-width: 150px;
+  padding: var(--space-3) var(--space-6);
+  font-size: var(--font-size-body);
+  font-weight: 700;
+  box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.25);
+}
+
 /* Piring Olahan / Meja Racik Hidangan (F3) */
 .dish-workbench {
   width: 100%;

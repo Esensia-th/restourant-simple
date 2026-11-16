@@ -6,7 +6,7 @@ Dokumen hidup. Diperbarui di **akhir setiap sesi** supaya sesi berikutnya (oleh 
 
 Tanggal: 2026-11-16
 
-T-001 sampai T-009 sudah ter-merge ke `main`. T-010 (Interaksi alat, bahan, dan proses 3 detik) selesai dikerjakan di branch `feat/T-010-interaksi-proses` dan berstatus `review`. Callback `onSelect` dari scene Three.js disambungkan ke `selectIngredient`/`beginProcess` di `main.js`; bahan yang diklik ditandai hijau di scene; alat yang dipakai menampilkan indikator progress bar HTML selama 3 detik; proses berhenti otomatis saat Pause. Pemetaan alat → aksi (kompor/penggorengan → goreng, spatula → aduk, alat pembuat kopi → seduh, blender buah → blender, wadah es batu/galon air → tambah bahan).
+T-001 sampai T-009 sudah ter-merge ke `main`. T-010 (Interaksi alat, bahan, dan proses 3 detik) serta T-011 (Tombol Sajikan dan alur penilaian pesanan) telah disempurnakan: objek 3D dapat digerakkan secara interaktif lewat drag & drop dengan kursor/jari atau animasi meluncur terbang saat diklik; area piring masak tengah merespons drop objek; aksi alat otomatis mencocokkan resep pesanan aktif; panel Recipe Guide memandu pemain langkah demi langkah; tombol Sajikan menilai hidangan dan memicu pelanggan membayar serta transisi ke pelanggan berikutnya. Seluruh 160 tes Vitest lulus, lint bersih, dan build sukses.
 
 ## Completed
 
@@ -62,3 +62,4 @@ Format entri: `tanggal | siapa (manusia atau nama alat) | task | hasil | catatan
 2026-11-16 | Antigravity (agen) | T-006–T-009 | UI halaman awal/hasil, HUD, pelanggan 2D, scene 3D ter-merge ke main (PR #12–#15) | lanjut T-010
 2026-11-16 | Antigravity (agen) | T-010 | interaksi alat/bahan/proses disambungkan; 20 tes baru lulus; lint/test/build lulus | uji manual browser oleh mahasiswa diperlukan sebelum merge PR
 2026-11-16 | Antigravity (agen) | fix-scene-3d | perbaikan scene 3D tidak terlihat & interaksi: mount layar main sekali & pembaruan UI in-place agar canvas tidak musnah tiap tick; auto-resize Three.js | 158 tes lulus, lint/build bersih
+2026-11-16 | Antigravity (agen) | fix-interaction-drag-drop | perbaikan interaksi T-009 dan T-010: sistem 3D drag & drop ke piring tengah, animasi gerak terbang/memasak, panel petunjuk resep langkah demi langkah, dan tombol Sajikan | 160 tes lulus, lint dan build bersih
