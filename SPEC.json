@@ -1,0 +1,516 @@
+{
+  "meta": {
+    "app_name": "Restoran Simple",
+    "slug": "restoran-simple",
+    "one_liner": "Game simulasi coffee shop di browser: pelanggan 2D gaya visual novel, alat dan bahan 3D yang bisa dipakai.",
+    "platform": "web",
+    "level": "dasar",
+    "language": "id",
+    "ai_tools": [
+      "Claude Code",
+      "Gemini CLI"
+    ],
+    "team_size": 1,
+    "duration_weeks": 1,
+    "delegated_questions": [
+      "C-20"
+    ],
+    "secondary_platforms": [],
+    "starting_point": "new",
+    "created_date": "2026-11-15",
+    "assistant_proposed": [
+      "meta.slug",
+      "meta.one_liner",
+      "goals",
+      "non_goals",
+      "metrics",
+      "features[*].acceptance",
+      "users[0].quote",
+      "data.menu_catalog",
+      "design.primary_color",
+      "design.font",
+      "risks",
+      "student_reflection.risk_controls"
+    ]
+  },
+  "problem": {
+    "statement": "Pemain ingin memainkan game simulasi melayani pesanan di coffee shop. Sebagian orang mungkin tidak tahu bahwa makanan atau minuman tertentu terbuat dari bahan apa saja, sehingga setiap menu perlu petunjuk pembuatan.",
+    "who": "Pemain yang ingin memainkan game ini (siapa saja)",
+    "current_alternative": "Tidak ada alternatif yang dipakai pemain saat ini."
+  },
+  "goals": [
+    "Pemain dapat menyelesaikan satu pesanan dari pelanggan datang sampai uang tampil di layar, hanya dengan alat dan bahan yang tersedia.",
+    "Pemain dapat mengetahui bahan penyusun tiap menu lewat petunjuk langkah pembuatan."
+  ],
+  "non_goals": [
+    "Login atau akun pengguna",
+    "Multiplayer",
+    "Penyimpanan skor atau progres (tiap main mulai dari nol)",
+    "Versi mobile atau native",
+    "Animasi pelanggan yang rumit (pelanggan 2D statis gaya visual novel)",
+    "Menu di luar 10 menu yang direncanakan"
+  ],
+  "users": [
+    {
+      "persona": "Pemain umum (siapa saja)",
+      "need": "Bermain simulasi coffee shop sambil tahu bahan penyusun tiap makanan dan minuman.",
+      "quote": "Saya ingin bermain santai sambil tahu makanan dan minuman ini dibuat dari bahan apa saja. (ilustrasi)"
+    }
+  ],
+  "user_conditions": [
+    "Antarmuka dalam Bahasa Indonesia"
+  ],
+  "features": [
+    {
+      "id": "F1",
+      "name": "Halaman awal dan Start",
+      "description": "Halaman awal tampil saat game dibuka dengan tombol Start untuk memulai permainan.",
+      "priority": "must",
+      "acceptance": [
+        "Jika game dibuka, halaman awal tampil dengan tombol Start, dan belum ada pelanggan atau timer yang berjalan.",
+        "Jika tombol Start ditekan, halaman awal tertutup dan pelanggan pertama (1/10) muncul."
+      ]
+    },
+    {
+      "id": "F2",
+      "name": "Pesanan pelanggan, penilaian, dan uang",
+      "description": "Pelanggan 2D gaya visual novel datang satu per satu dan menyebut satu dari 10 menu; hidangan dinilai, lalu pelanggan membayar atau pergi. Game berakhir setelah 10 pelanggan atau saat ada pelanggan yang pergi.",
+      "priority": "must",
+      "acceptance": [
+        "Jika pelanggan muncul, dialognya menyebut tepat satu menu dari 10 menu, dan pelanggan berikutnya baru muncul setelah pelanggan sebelumnya terlayani atau pergi.",
+        "Jika pemain menekan Sajikan dan urutan bahan serta proses di hidangan sama persis dengan resep menu yang dipesan, pelanggan membayar sebesar harga menu itu dan total uang di layar bertambah sebesar harga tersebut.",
+        "Jika pemain menekan Sajikan dan bahan, proses, atau urutannya tidak sesuai resep, pelanggan pergi, uang tidak bertambah, dan game berakhir dengan hasil kalah.",
+        "Layar selalu menampilkan nomor pelanggan (mis. 3/10) dan total uang.",
+        "Jika ke-10 pelanggan terlayani benar, layar hasil menang muncul berisi total uang dan tombol Main lagi; jika game berakhir kalah, layar hasil kalah muncul dengan isi yang sama.",
+        "Jika tombol Main lagi ditekan, game kembali ke awal dengan uang 0 dan pelanggan 1/10.",
+        "Ke-10 menu memiliki harga yang berbeda satu sama lain."
+      ]
+    },
+    {
+      "id": "F3",
+      "name": "Interaksi alat dan bahan 3D",
+      "description": "Alat dan bahan berupa objek 3D yang bisa dipilih dan dipakai pemain; tiap proses berlangsung 3 detik.",
+      "priority": "must",
+      "acceptance": [
+        "Jika pemain memilih salah satu dari 7 alat (kompor, penggorengan, spatula, alat pembuat kopi, wadah es batu, galon air, blender buah) atau salah satu dari 9 bahan (susu, buah, roti, telur, sayur, garam, gula, biji kopi, air), objek itu merespons dengan perubahan yang terlihat (mis. sorotan atau gerakan).",
+        "Jika pemain menjalankan sebuah proses (goreng, panggang, aduk, balik, seduh, blender), proses berlangsung 3 detik dengan indikator progres, lalu hasilnya terlihat berubah pada objek.",
+        "Jika pemain memakai kombinasi atau urutan bahan dan alat di luar resep, tidak terjadi error, dan urutan itu tercatat di hidangan untuk dinilai saat Sajikan ditekan.",
+        "Total waktu proses otomatis tiap resep dari 10 menu paling lama 20 detik (maksimal 6 proses × 3 detik)."
+      ]
+    },
+    {
+      "id": "F4",
+      "name": "Timer 30 detik, pause, dan resume",
+      "description": "Tiap pesanan punya batas waktu 30 detik yang dapat dijeda dan dilanjutkan.",
+      "priority": "must",
+      "acceptance": [
+        "Jika pelanggan selesai menyebut pesanan, timer 30 detik mulai berjalan dan hitung mundurnya tampil di layar.",
+        "Jika tombol Pause ditekan, timer dan proses 3 detik berhenti, interaksi alat dan bahan dinonaktifkan; jika Resume ditekan, keduanya berlanjut dari sisa waktu terakhir.",
+        "Jika timer mencapai 0 sebelum hidangan disajikan, proses yang sedang berjalan dibatalkan dan pelanggan pergi (game berakhir kalah)."
+      ]
+    },
+    {
+      "id": "F5",
+      "name": "Petunjuk langkah pembuatan",
+      "description": "Panel petunjuk selalu tampil di layar game dan berisi daftar bahan, alat, dan urutan langkah menu yang dipesan.",
+      "priority": "must",
+      "acceptance": [
+        "Jika ada pesanan aktif, panel petunjuk tampil di layar game yang sama (tanpa tombol buka/tutup) dan menampilkan bahan, alat, dan urutan langkah menu yang dipesan.",
+        "Ke-10 menu memiliki petunjuk berisi daftar bahan dan urutan langkah (diperiksa lewat tes data).",
+        "Jika panel petunjuk dilihat atau digulir, timer 30 detik tidak berhenti dan tidak berubah kecepatannya."
+      ]
+    }
+  ],
+  "metrics": [
+    {
+      "name": "Waktu proses resep",
+      "target": "Ke-10 menu ≤ 20 detik total waktu proses",
+      "how_measured": "Tes Vitest yang menjumlahkan durasi proses tiap resep"
+    },
+    {
+      "name": "Kelengkapan petunjuk",
+      "target": "10 dari 10 menu punya daftar bahan dan langkah",
+      "how_measured": "Tes data Vitest dan daftar periksa manual"
+    },
+    {
+      "name": "Putaran permainan tanpa error",
+      "target": "Satu putaran penuh (Start → pesanan → bayar atau pergi) berjalan tanpa error di browser untuk tiap menu",
+      "how_measured": "Uji manual per menu di browser, dicatat di docs/REVIEW.md"
+    }
+  ],
+  "stack": {
+    "frontend": "Three.js (objek 3D), HTML/CSS (lapisan 2D), Vite, JavaScript",
+    "backend": "Tidak ada (game berjalan sepenuhnya di browser)",
+    "database": "Tidak ada (state game di memori; progres tidak disimpan)",
+    "auth": "Tidak ada",
+    "hosting": "Vercel (hosting statis)",
+    "testing": "Vitest",
+    "keywords": [
+      "Three.js",
+      "JavaScript",
+      "Vite",
+      "HTML/CSS",
+      "Vitest",
+      "Vercel"
+    ],
+    "extra": [],
+    "source": "custom",
+    "custom_reason": "karena ketentuan tugas dan sekalian ingin belajar",
+    "custom_layers": [],
+    "ecosystems": [
+      "node"
+    ],
+    "commands": {
+      "install": "npm install",
+      "dev": "npm run dev",
+      "lint": "npm run lint",
+      "typecheck": "",
+      "test": "npm test",
+      "build": "npm run build",
+      "ci_setup": ""
+    },
+    "versions": []
+  },
+  "data": {
+    "entities": [
+      {
+        "name": "Menu",
+        "fields": [
+          "id",
+          "name",
+          "category (makanan/minuman)",
+          "price_idr",
+          "steps[] (urutan langkah: bahan atau proses beserta alat dan durasi 3 detik)"
+        ]
+      },
+      {
+        "name": "Pesanan",
+        "fields": [
+          "customer_number (1–10)",
+          "menu_id",
+          "status (menunggu/terlayani/pergi)",
+          "time_left_seconds",
+          "dish (urutan bahan dan proses yang dipakai)"
+        ]
+      },
+      {
+        "name": "StatusGame",
+        "fields": [
+          "screen (awal/main/hasil)",
+          "customer_number",
+          "total_money_idr",
+          "paused",
+          "result (menang/kalah)"
+        ]
+      }
+    ],
+    "menu_catalog": [
+      {
+        "id": "M01",
+        "name": "Telur Goreng",
+        "category": "makanan",
+        "price_idr": 7000,
+        "steps": [
+          {
+            "type": "ingredient",
+            "item": "telur"
+          },
+          {
+            "type": "ingredient",
+            "item": "garam"
+          },
+          {
+            "type": "process",
+            "action": "goreng",
+            "tool": "kompor + penggorengan",
+            "duration_seconds": 3
+          }
+        ]
+      },
+      {
+        "id": "M02",
+        "name": "Roti Panggang",
+        "category": "makanan",
+        "price_idr": 9000,
+        "steps": [
+          {
+            "type": "ingredient",
+            "item": "roti"
+          },
+          {
+            "type": "process",
+            "action": "panggang",
+            "tool": "kompor + penggorengan",
+            "duration_seconds": 3
+          }
+        ]
+      },
+      {
+        "id": "M03",
+        "name": "Tumis Sayur",
+        "category": "makanan",
+        "price_idr": 11000,
+        "steps": [
+          {
+            "type": "ingredient",
+            "item": "sayur"
+          },
+          {
+            "type": "ingredient",
+            "item": "garam"
+          },
+          {
+            "type": "process",
+            "action": "goreng",
+            "tool": "kompor + penggorengan",
+            "duration_seconds": 3
+          },
+          {
+            "type": "process",
+            "action": "aduk",
+            "tool": "spatula",
+            "duration_seconds": 3
+          }
+        ]
+      },
+      {
+        "id": "M04",
+        "name": "Omelet Sayur",
+        "category": "makanan",
+        "price_idr": 14000,
+        "steps": [
+          {
+            "type": "ingredient",
+            "item": "telur"
+          },
+          {
+            "type": "ingredient",
+            "item": "sayur"
+          },
+          {
+            "type": "ingredient",
+            "item": "garam"
+          },
+          {
+            "type": "process",
+            "action": "goreng",
+            "tool": "kompor + penggorengan",
+            "duration_seconds": 3
+          },
+          {
+            "type": "process",
+            "action": "balik",
+            "tool": "spatula",
+            "duration_seconds": 3
+          }
+        ]
+      },
+      {
+        "id": "M05",
+        "name": "Roti Goreng Telur",
+        "category": "makanan",
+        "price_idr": 17000,
+        "steps": [
+          {
+            "type": "ingredient",
+            "item": "roti"
+          },
+          {
+            "type": "ingredient",
+            "item": "telur"
+          },
+          {
+            "type": "ingredient",
+            "item": "susu"
+          },
+          {
+            "type": "ingredient",
+            "item": "gula"
+          },
+          {
+            "type": "process",
+            "action": "goreng",
+            "tool": "kompor + penggorengan",
+            "duration_seconds": 3
+          },
+          {
+            "type": "process",
+            "action": "balik",
+            "tool": "spatula",
+            "duration_seconds": 3
+          }
+        ]
+      },
+      {
+        "id": "M06",
+        "name": "Kopi Hitam",
+        "category": "minuman",
+        "price_idr": 8000,
+        "steps": [
+          {
+            "type": "ingredient",
+            "item": "biji kopi"
+          },
+          {
+            "type": "ingredient",
+            "item": "air"
+          },
+          {
+            "type": "process",
+            "action": "seduh",
+            "tool": "alat pembuat kopi",
+            "duration_seconds": 3
+          }
+        ]
+      },
+      {
+        "id": "M07",
+        "name": "Jus Buah",
+        "category": "minuman",
+        "price_idr": 10000,
+        "steps": [
+          {
+            "type": "ingredient",
+            "item": "buah"
+          },
+          {
+            "type": "ingredient",
+            "item": "air"
+          },
+          {
+            "type": "process",
+            "action": "blender",
+            "tool": "blender buah",
+            "duration_seconds": 3
+          }
+        ]
+      },
+      {
+        "id": "M08",
+        "name": "Kopi Susu",
+        "category": "minuman",
+        "price_idr": 12000,
+        "steps": [
+          {
+            "type": "ingredient",
+            "item": "biji kopi"
+          },
+          {
+            "type": "ingredient",
+            "item": "air"
+          },
+          {
+            "type": "ingredient",
+            "item": "susu"
+          },
+          {
+            "type": "ingredient",
+            "item": "gula"
+          },
+          {
+            "type": "process",
+            "action": "seduh",
+            "tool": "alat pembuat kopi",
+            "duration_seconds": 3
+          }
+        ]
+      },
+      {
+        "id": "M09",
+        "name": "Es Kopi Susu",
+        "category": "minuman",
+        "price_idr": 15000,
+        "steps": [
+          {
+            "type": "ingredient",
+            "item": "biji kopi"
+          },
+          {
+            "type": "ingredient",
+            "item": "air"
+          },
+          {
+            "type": "process",
+            "action": "seduh",
+            "tool": "alat pembuat kopi",
+            "duration_seconds": 3
+          },
+          {
+            "type": "ingredient",
+            "item": "es batu"
+          },
+          {
+            "type": "ingredient",
+            "item": "susu"
+          }
+        ]
+      },
+      {
+        "id": "M10",
+        "name": "Smoothie Buah Susu",
+        "category": "minuman",
+        "price_idr": 18000,
+        "steps": [
+          {
+            "type": "ingredient",
+            "item": "buah"
+          },
+          {
+            "type": "ingredient",
+            "item": "susu"
+          },
+          {
+            "type": "ingredient",
+            "item": "es batu"
+          },
+          {
+            "type": "process",
+            "action": "blender",
+            "tool": "blender buah",
+            "duration_seconds": 3
+          }
+        ]
+      }
+    ],
+    "personal_data": "none",
+    "sensitive_notes": "Tidak ada data pribadi yang diproses; tidak ada akun dan tidak ada penyimpanan di server."
+  },
+  "security": {
+    "roles": [
+      "pemain"
+    ],
+    "auth_method": "Tidak ada login",
+    "secrets_handling": ".env lokal, tidak di-commit; nilai produksi di pengelola rahasia hosting"
+  },
+  "ai_in_app": {
+    "mode": "none",
+    "purpose": "Tidak ada fitur AI di dalam aplikasi."
+  },
+  "design": {
+    "tone": "Santai",
+    "primary_color": "#2563EB",
+    "font": "system-ui (sans-serif bawaan sistem)",
+    "dark_mode": false
+  },
+  "platform_specific": {
+    "web": {
+      "rendering": "static",
+      "i18n": false,
+      "seo": false
+    }
+  },
+  "risks": [
+    "Lingkup 5 fitur must (10 menu, objek 3D interaktif, timer, pause) harus selesai oleh 1 orang dalam 1 minggu.",
+    "Timer 30 detik, proses 3 detik, dan pause saling bergantung sehingga rawan bug keadaan (state).",
+    "Aset 3D alat dan bahan belum tersedia; bentuk dasar Three.js dipakai lebih dulu bila model siap pakai belum ada."
+  ],
+  "student_reflection": {
+    "biggest_risk": "tidak selesai, takut banyak bug dan eror",
+    "why_this_project": "karena untuk belajar dan ini juga sebagai tugas kuliah",
+    "risk_controls": [
+      "Logika game (resep 10 menu, penilaian benar/salah, harga, aturan menang/kalah 10 pelanggan, timer yang berhenti saat pause dan lanjut saat resume) dijaga tes Vitest; jika npm test gagal, perubahan tidak boleh digabung ke main.",
+      "Jika terjadi error saat game berjalan, pemain melihat pesan \"Terjadi kesalahan\" dengan tombol kembali ke halaman awal, bukan layar putih atau game membeku.",
+      "Tiap fitur dimainkan satu putaran penuh (Start → pesanan → bayar atau pergi) di browser dan hasilnya dicatat di docs/REVIEW.md sebelum task ditutup."
+    ]
+  }
+}
