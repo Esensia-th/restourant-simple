@@ -6,29 +6,31 @@ Dokumen hidup. Diperbarui di **akhir setiap sesi** supaya sesi berikutnya (oleh 
 
 Tanggal: 2026-11-16
 
-Task T-002 (Katalog menu dan data petunjuk) telah selesai dikerjakan pada branch `feat/T-002-katalog-menu`. Modul `src/game/menu-catalog.js` memuat 10 menu (5 makanan dan 5 minuman) persis seperti `SPEC.json` (data.menu_catalog) beserta urutan langkah bahan/proses, alat, dan durasi tiap proses 3 detik tanpa menyentuh DOM atau mengimpor Three.js. Pengujian otomatis di `tests/menu-catalog.test.js` memverifikasi tepat 10 menu, 10 harga berbeda, kelengkapan bahan dan urutan langkah, serta batas waktu proses ≤ 20 detik. Seluruh gerbang kualitas (`npm run lint`, `npm test`, `npm run build`) telah lulus. Menunggu review manusia sebelum merge ke `main`.
+T-001 (setup) dan T-002 (katalog menu) sudah ter-merge ke `main`. Vitest dinaikkan ke 5.1.0 lewat PR Dependabot (PR #5) sehingga `npm audit` bersih (0 vulnerabilities). T-003 (logika timer dan jam permainan) selesai dikerjakan di branch `feat/T-003-timer-jam-permainan` dan menunggu pull request, CI, dan merge. Pekerjaan dilakukan dari `C:\dev\restourant-simple` (di luar OneDrive).
 
 ## Completed
 
 | Tanggal | Task | PR/Commit | Catatan |
 |---|---|---|---|
-| - | Dokumen proyek dihasilkan | - | Paket dokumen awal dari SPEC.json |
-| 2026-11-16 | T-001: Setup repositori, tooling, dan kerangka minimal | feat/T-001-setup-proyek | Dimerge ke main; Vite + Three.js + Vitest + ESLint terpasang |
-| 2026-11-16 | T-002: Katalog menu dan data petunjuk | feat/T-002-katalog-menu | src/game/menu-catalog.js dan tests/menu-catalog.test.js selesai; lint, test, build lulus |
+| 2026-11-16 | T-001 Setup repositori, tooling, dan kerangka minimal | PR #1 | Vite, Vitest, ESLint terpasang; `lint`, `test`, `build` lulus |
+| 2026-11-16 | Pembaruan vitest ke 5.1.0 | PR #5 (Dependabot) | Menutup 3 temuan `npm audit` (1 moderate, 2 critical) |
+| 2026-11-16 | T-002 Katalog menu dan data petunjuk | PR #8 | 10 menu persis SPEC dan tesnya |
 
 ## In Progress
 
-T-002: Menunggu review manusia (status: `review`).
+T-003 Logika timer dan jam permainan (status `review`, PR belum dibuka). Berkas: `src/game/timer.js` dan `tests/timer.test.js`.
 
 ## Next Up
 
-1. Review dan merge T-002 ke `main`
-2. T-003: Logika timer dan jam permainan
-3. T-004: Penilaian hidangan
+1. T-004: Penilaian hidangan
+2. T-005: State game, aturan 10 pelanggan, dan uang
+3. T-006: Halaman awal, Start, dan layar hasil
 
 ## Blockers
 
 Tidak ada.
+
+Catatan (bukan hambatan): cabang Dependabot untuk `vite`, `three`, `eslint`, `actions/checkout`, dan `actions/setup-node` sengaja dibiarkan terbuka sampai game punya tes yang cukup; tangani satu per satu dan pastikan CI hijau sebelum merge. Peringatan `esbuild` (install-scripts) tidak berdampak pada `lint`, `test`, maupun `build`.
 
 Format satu baris untuk hambatan berikutnya: `tanggal | task | hambatan | yang sudah dicoba | siapa yang bisa membantu`.
 
@@ -37,5 +39,7 @@ Format satu baris untuk hambatan berikutnya: `tanggal | task | hambatan | yang s
 Format entri: `tanggal | siapa (manusia atau nama alat) | task | hasil | catatan untuk sesi berikutnya`.
 
 2026-11-15 | asisten penyusun dokumen | pembuatan dokumen | 16 dokumen dan pendukung git | mulai dari T-001
-2026-11-16 | agen Antigravity | T-001 | setup tooling, kerangka src/, tests, lint/test/build lulus | dimerge ke main
-2026-11-16 | agen Antigravity | T-002 | katalog 10 menu & unit test dibuat, lint/test/build lulus | siap di-review manusia
+2026-11-16 | Antigravity (agen) | T-001 | setup proyek selesai dan ter-merge (PR #1) | pindah proyek ke C:\dev di luar OneDrive
+2026-11-16 | manusia | perbaikan keamanan dependensi | vitest naik ke 5.1.0 (PR #5), npm audit bersih | cabang Dependabot lain dibiarkan
+2026-11-16 | Antigravity (agen) | T-002 | katalog 10 menu dan tes ter-merge (PR #8) | lanjut T-003
+2026-11-16 | manual (tanpa agen) | T-003 | timer dan proses 3 detik selesai, tes lulus | lanjut T-004
