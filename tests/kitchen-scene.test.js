@@ -55,4 +55,17 @@ describe('Kitchen Scene 3D Data & Objects (F3)', () => {
     expect(mesh.geometry).toBeDefined();
     expect(mesh.material).toBeDefined();
   });
+
+  it('mendukung visualisasi emisi untuk penandaan bahan dan proses', () => {
+    const ingMesh = createKitchenObject(INGREDIENTS[0], 'ingredient');
+    expect(ingMesh.userData.used).toBeFalsy();
+    ingMesh.userData.used = true;
+    ingMesh.material.emissive.setHex(0x10B981);
+    expect(ingMesh.userData.used).toBe(true);
+    expect(ingMesh.material.emissive.getHex()).toBe(0x10B981);
+
+    const toolMesh = createKitchenObject(TOOLS[0], 'tool');
+    toolMesh.material.emissive.setHex(0xF59E0B);
+    expect(toolMesh.material.emissive.getHex()).toBe(0xF59E0B);
+  });
 });

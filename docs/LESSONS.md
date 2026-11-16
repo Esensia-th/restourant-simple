@@ -18,6 +18,7 @@ Kesalahan berulang dan pelajaran dari proyek ini. **Dibaca agen di awal setiap s
 | Awal (belum terjadi di proyek ini) | Timer tetap berjalan saat Pause karena memakai `setInterval` mentah | Waktu dihitung di luar jam permainan yang bisa dijeda | Semua timer memakai jam permainan; `setInterval` mentah dilarang untuk timer utama | `docs/CODE_STYLE.md` (Forbidden Patterns) |
 | Awal (belum terjadi di proyek ini) | Agen mengerjakan beberapa task sekaligus dalam satu sesi | Cakupan tidak dibatasi di awal sesi | Satu task per sesi, mulai dari branch baru | `docs/WORKFLOW.md` (Session Start Ritual) |
 | Awal (belum terjadi di proyek ini) | Agen menyatakan fitur selesai tanpa pernah dimainkan di browser | Hanya mengandalkan tes unit untuk bagian 3D dan UI | Mainkan satu putaran penuh dan catat di `docs/REVIEW.md` sebelum menutup task (R3) | `docs/TESTING.md` (Definition of Done) |
+| 2026-11-16 | Objek 3D tidak terlihat & tidak bisa diklik | `renderApp` menghapus seluruh DOM (`root.textContent = ''`) di setiap tick frame, membuat canvas baru yang tidak terhubung ke Three.js | Layar game 3D dipasang sekali (`mountMainScreen`), pembaruan waktu/HUD dilakukan in-place (`updateMainUI`) tanpa merusak elemen canvas | `src/main.js` |
 
 ## Patterns to Watch
 
