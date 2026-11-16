@@ -1,0 +1,66 @@
+/* main.css — Gaya dasar Restoran Simple */
+/* Token desain dari docs/DESIGN_SYSTEM.md */
+
+:root {
+  --color-primary: #2563EB;
+  --color-primary-strong: #1D4ED8;
+  --color-secondary: #15803D;
+  --color-bg: #FFFFFF;
+  --color-surface: #F1F5F9;
+  --color-text: #0F172A;
+  --color-text-muted: #475569;
+  --color-border: #64748B;
+  --color-border-subtle: #CBD5E1;
+  --color-success: #15803D;
+  --color-warning: #B45309;
+  --color-danger: #B91C1C;
+  --color-focus: #1D4ED8;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--color-text);
+  background-color: var(--color-bg);
+}
+
+#app {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: var(--space-4);
+}
+
+/* Fokus keyboard terlihat (WCAG 2.2 AA) */
+:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+/* Hormati preferensi gerakan berkurang */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

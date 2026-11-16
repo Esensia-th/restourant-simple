@@ -4,23 +4,24 @@ Dokumen hidup. Diperbarui di **akhir setiap sesi** supaya sesi berikutnya (oleh 
 
 ## Current State
 
-Tanggal: 2026-11-15
+Tanggal: 2026-11-16
 
-Dokumen proyek Restoran Simple baru dihasilkan dari `SPEC.json` dan belum ada kode. Repositori belum memiliki `package.json`, `src/`, maupun `tests/`. Langkah pertama adalah T-001 (setup repositori, tooling, dan kerangka minimal) di `docs/TASKS.md`. Tim 1 orang dengan waktu 1 minggu, level proses dasar.
+Task T-001 (Setup repositori, tooling, dan kerangka minimal) telah selesai dikerjakan pada branch `feat/T-001-setup-proyek`. Repositori kini memiliki `package.json`, `vite.config.js`, `eslint.config.js`, struktur direktori `src/` (`src/game/`, `src/scene/`, `src/ui/`, `src/styles/`), `tests/`, serta `.github/workflows/ci.yml`. Semua gerbang kualitas (`npm run lint`, `npm test`, `npm run build`) telah lulus. Menunggu review manusia sebelum merge ke `main`.
 
 ## Completed
 
 | Tanggal | Task | PR/Commit | Catatan |
 |---|---|---|---|
 | - | Dokumen proyek dihasilkan | - | Paket dokumen awal dari SPEC.json |
+| 2026-11-16 | T-001: Setup repositori, tooling, dan kerangka minimal | feat/T-001-setup-proyek | Vite + Three.js + Vitest + ESLint terpasang; lint, test, build lulus |
 
 ## In Progress
 
-Tidak ada.
+T-001: Menunggu review manusia (status: `review`).
 
 ## Next Up
 
-1. T-001: Setup repositori, tooling, dan kerangka minimal
+1. Review dan merge T-001 ke `main`
 2. T-002: Katalog menu dan data petunjuk
 3. T-003: Logika timer dan jam permainan
 
@@ -35,3 +36,4 @@ Format satu baris untuk hambatan berikutnya: `tanggal | task | hambatan | yang s
 Format entri: `tanggal | siapa (manusia atau nama alat) | task | hasil | catatan untuk sesi berikutnya`.
 
 2026-11-15 | asisten penyusun dokumen | pembuatan dokumen | 16 dokumen dan pendukung git | mulai dari T-001
+2026-11-16 | agen Antigravity | T-001 | setup tooling, kerangka src/, tests, lint/test/build lulus | siap di-review manusia
