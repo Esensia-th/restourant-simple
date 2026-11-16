@@ -153,9 +153,97 @@ body {
   background-color: var(--color-primary-strong);
 }
 
+.btn-secondary {
+  background-color: var(--color-secondary);
+  color: #FFFFFF;
+}
+
+.btn-secondary:hover {
+  filter: brightness(0.9);
+}
+
+.btn-neutral {
+  background-color: var(--color-surface);
+  color: var(--color-text);
+  border-color: var(--color-border);
+}
+
+.btn-neutral:hover {
+  background-color: #E2E8F0;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 .btn-large {
   padding: var(--space-3) var(--space-8);
   font-size: 18px;
+}
+
+/* Komponen HUD */
+.hud-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: var(--space-3) var(--space-4);
+  width: 100%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.hud-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 90px;
+}
+
+.hud-label {
+  font-size: var(--font-size-caption);
+  color: var(--color-text-muted);
+  font-weight: 500;
+}
+
+.hud-value {
+  font-size: var(--font-size-hud);
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.hud-timer-paused .hud-value {
+  color: var(--color-warning);
+}
+
+.hud-timer-paused .hud-label {
+  color: var(--color-warning);
+}
+
+.hud-money-value {
+  color: var(--color-success);
+}
+
+.hud-actions {
+  min-width: 100px;
+  display: flex;
+  justify-content: center;
+}
+
+/* Pause Overlay / Status */
+.paused-banner {
+  background-color: #FEF3C7;
+  color: var(--color-warning);
+  border: 1px solid var(--color-warning);
+  border-radius: 6px;
+  padding: var(--space-2) var(--space-4);
+  text-align: center;
+  font-weight: 600;
+  width: 100%;
 }
 
 /* Layar Game Placeholder */

@@ -66,6 +66,7 @@ Isi satu baris setiap selesai menguji sebuah fitur satu putaran penuh (Start →
 | Tanggal | Task | Fitur | Menu yang dimainkan | Hasil | Error di konsol | Catatan |
 |---|---|---|---|---|---|---|
 | 2026-11-16 | T-006 | F1, F2 | M01 (Telur Goreng) | Sukses | Tidak ada | Layar awal tampil dengan tombol Start; klik Start berpindah ke pelanggan 1/10 dengan uang Rp0; layar hasil menang dan kalah menampilkan total uang dan tombol Main lagi yang mengembalikan permainan ke pelanggan 1/10 |
+| 2026-11-16 | T-007 | F4, F2 | M01 (Telur Goreng) | Sukses | Tidak ada | HUD menampilkan nomor pelanggan (mis. 1/10), timer hitung mundur dari 30s, total uang, dan tombol Pause/Resume; tombol Pause menghentikan timer dan menampilkan banner dijeda; Resume melanjutkan timer |
 
 ## AI-Generated Code Checks
 

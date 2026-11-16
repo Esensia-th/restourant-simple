@@ -6,7 +6,7 @@ Dokumen hidup. Diperbarui di **akhir setiap sesi** supaya sesi berikutnya (oleh 
 
 Tanggal: 2026-11-16
 
-T-001 sampai T-005 sudah ter-merge ke `main`. T-006 (halaman awal, Start, dan layar hasil) selesai dikerjakan di branch `feat/T-006-halaman-awal-hasil` dan berstatus `review`. Tampilan awal, transisi Start ke pelanggan 1/10, layar hasil menang/kalah, format mata uang rupiah, dan tombol Main lagi lengkap dengan pengujian komponen dan integrasi.
+T-001 sampai T-006 sudah ter-merge ke `main`. T-007 (HUD, Pause, dan Resume di layar) selesai dikerjakan di branch `feat/T-007-hud-pause-resume` dan berstatus `review`. Komponen HUD lengkap menampilkan nomor pelanggan (mis. 1/10), timer hitung mundur dari 30s, total uang, dan tombol Pause/Resume yang terhubung dengan game loop dan state game.
 
 ## Completed
 
@@ -18,16 +18,17 @@ T-001 sampai T-005 sudah ter-merge ke `main`. T-006 (halaman awal, Start, dan la
 | 2026-11-16 | T-003 Logika timer dan jam permainan | PR #9 | Timer 30 detik, proses 3 detik, Pause/Resume, timer habis membatalkan proses |
 | 2026-11-16 | T-004 Penilaian hidangan | PR #10 | Hidangan benar bila bahan, proses, dan urutan persis resep |
 | 2026-11-16 | T-005 State game, aturan 10 pelanggan, dan uang | PR #11 | State alur 10 pelanggan, menang/kalah, dan uang |
+| 2026-11-16 | T-006 Halaman awal, Start, dan layar hasil | PR #12 | Layar awal, Start, layar hasil menang/kalah, dan tombol Main lagi |
 
 ## In Progress
 
-T-006 Halaman awal, Start, dan layar hasil (status `review`, PR siap diajukan). Berkas: `src/ui/screens.js`, `src/styles/main.css`, `src/main.js`, `tests/screens.test.js`, dan `tests/app-integration.test.js`.
+T-007 HUD, Pause, dan Resume di layar (status `review`, PR siap diajukan). Berkas: `src/ui/hud.js`, `src/styles/main.css`, `src/main.js`, `tests/hud.test.js`, dan `tests/app-integration.test.js`.
 
 ## Next Up
 
-1. T-007: HUD, Pause, dan Resume di layar
-2. T-008: Pelanggan 2D dan dialog pesanan
-3. T-009: Scene 3D alat dan bahan
+1. T-008: Pelanggan 2D dan dialog pesanan
+2. T-009: Scene 3D alat dan bahan
+3. T-010: Interaksi alat, bahan, dan proses 3 detik
 
 ## Blockers
 

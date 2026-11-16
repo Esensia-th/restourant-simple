@@ -1,13 +1,21 @@
 /**
- * @file app-integration.test.js — Pengujian integrasi alur aplikasi di main.js (F1, F2).
+ * @file app-integration.test.js — Pengujian integrasi alur aplikasi di main.js (F1, F2, F4).
  */
 
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { setupMockDocument } from './helpers/mock-dom.js';
-import { createGameState, startGame, playAgain } from '../src/game/game-state.js';
-import { renderStartScreen, renderResultScreen, formatRupiah } from '../src/ui/screens.js';
+import {
+  createGameState,
+  startGame,
+  playAgain,
+  pauseGame,
+  resumeGame,
+  TOTAL_CUSTOMERS,
+} from '../src/game/game-state.js';
+import { renderStartScreen, renderResultScreen } from '../src/ui/screens.js';
+import { renderHUD } from '../src/ui/hud.js';
 
-describe('Integrasi Alur Aplikasi (F1, F2)', () => {
+describe('Integrasi Alur Aplikasi (F1, F2, F4)', () => {
   let cleanup;
   let root;
 
@@ -20,7 +28,7 @@ describe('Integrasi Alur Aplikasi (F1, F2)', () => {
     if (cleanup) cleanup();
   });
 
-  it('alur lengkap: Awal -> Start -> Game (1/10, Rp0) -> Hasil Kalah -> Main lagi', () => {
+  it('alur lengkap: Awal -> Start -> Game (HUD: 1/10, 30s, Rp0, Pause) -> Pause -> Resume -> Kalah -> Main lagi', () => {
     let state = createGameState();
 
     function render(container) {
@@ -54,11 +62,31 @@ describe('Integrasi Alur Aplikasi (F1, F2)', () => {
         const gameContainer = document.createElement('div');
         gameContainer.setAttribute('data-testid', 'game-container');
 
-        const hud = document.createElement('div');
-        hud.setAttribute('data-testid', 'game-hud');
-        hud.textContent = `Pelanggan: ${state.customerNumber}/10 | Uang: ${formatRupiah(state.totalMoneyIdr)}`;
+        const hud = renderHUD({
+          customerNumber: state.customerNumber,
+          totalCustomers: TOTAL_CUSTOMERS,
+          timeLeftSeconds: state.order ? state.order.timeLeftSeconds : 30,
+          totalMoneyIdr: state.totalMoneyIdr,
+          paused: state.paused,
+          onPause: () => {
+            state = pauseGame(state);
+            render(container);
+          },
+          onResume: () => {
+            state = resumeGame(state);
+            render(container);
+          },
+        });
 
         gameContainer.appendChild(hud);
+
+        if (state.paused) {
+          const pausedBanner = document.createElement('div');
+          pausedBanner.setAttribute('data-testid', 'paused-banner');
+          pausedBanner.textContent = 'Permainan Dijeda';
+          gameContainer.appendChild(pausedBanner);
+        }
+
         container.appendChild(gameContainer);
       }
     }
@@ -69,31 +97,50 @@ describe('Integrasi Alur Aplikasi (F1, F2)', () => {
     const startBtn = root.querySelector('[data-testid="btn-start"]');
     expect(startBtn).not.toBeNull();
 
-    // 2. Klik Start -> beralih ke layar 'main', pelanggan 1/10, Uang Rp0
+    // 2. Klik Start -> beralih ke layar 'main' dengan HUD
     startBtn.click();
     expect(state.screen).toBe('main');
     expect(state.customerNumber).toBe(1);
     expect(state.totalMoneyIdr).toBe(0);
-    const hud = root.querySelector('[data-testid="game-hud"]');
-    expect(hud).not.toBeNull();
-    expect(hud.textContent).toContain('Pelanggan: 1/10 | Uang: Rp0');
+    expect(state.paused).toBe(false);
 
-    // 3. Simulasikan permainan berakhir kalah
+    expect(root.querySelector('[data-testid="hud-customer-value"]').textContent).toBe('1/10');
+    expect(root.querySelector('[data-testid="hud-timer-value"]').textContent).toBe('30s');
+    expect(root.querySelector('[data-testid="hud-money-value"]').textContent).toBe('Rp0');
+
+    // 3. Uji tombol Pause di HUD
+    const pauseBtn = root.querySelector('[data-testid="btn-pause"]');
+    expect(pauseBtn).not.toBeNull();
+    pauseBtn.click();
+
+    expect(state.paused).toBe(true);
+    expect(root.querySelector('[data-testid="paused-banner"]')).not.toBeNull();
+    const resumeBtn = root.querySelector('[data-testid="btn-resume"]');
+    expect(resumeBtn).not.toBeNull();
+    expect(root.querySelector('[data-testid="btn-pause"]')).toBeNull();
+
+    // 4. Uji tombol Resume di HUD
+    resumeBtn.click();
+    expect(state.paused).toBe(false);
+    expect(root.querySelector('[data-testid="paused-banner"]')).toBeNull();
+    expect(root.querySelector('[data-testid="btn-pause"]')).not.toBeNull();
+
+    // 5. Simulasikan permainan berakhir kalah
     state = { ...state, screen: 'hasil', result: 'kalah', totalMoneyIdr: 15000 };
     render(root);
     expect(root.querySelector('[data-testid="result-screen"]')).not.toBeNull();
     expect(root.querySelector('[data-testid="result-title"]').textContent).toBe('Permainan Berakhir');
     expect(root.querySelector('[data-testid="result-money"]').textContent).toBe('Rp15.000');
 
-    // 4. Klik Main lagi -> kembali ke pelanggan 1/10 dan Uang Rp0
+    // 6. Klik Main lagi -> kembali ke pelanggan 1/10 dan Uang Rp0
     const playAgainBtn = root.querySelector('[data-testid="btn-play-again"]');
     expect(playAgainBtn).not.toBeNull();
     playAgainBtn.click();
     expect(state.screen).toBe('main');
     expect(state.customerNumber).toBe(1);
     expect(state.totalMoneyIdr).toBe(0);
-    const hudAfterReset = root.querySelector('[data-testid="game-hud"]');
-    expect(hudAfterReset.textContent).toContain('Pelanggan: 1/10 | Uang: Rp0');
+    expect(root.querySelector('[data-testid="hud-customer-value"]').textContent).toBe('1/10');
+    expect(root.querySelector('[data-testid="hud-money-value"]').textContent).toBe('Rp0');
   });
 
   it('alur hasil menang: menampilkan judul menang, total uang dan tombol Main lagi', () => {
