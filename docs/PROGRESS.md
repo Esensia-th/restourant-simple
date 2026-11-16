@@ -61,3 +61,4 @@ Format entri: `tanggal | siapa (manusia atau nama alat) | task | hasil | catatan
 2026-11-16 | manual (kode dari asisten chat) | T-005 | state game dan tesnya selesai, lint/test/build lulus | lanjut T-006 (UI)
 2026-11-16 | Antigravity (agen) | T-006–T-009 | UI halaman awal/hasil, HUD, pelanggan 2D, scene 3D ter-merge ke main (PR #12–#15) | lanjut T-010
 2026-11-16 | Antigravity (agen) | T-010 | interaksi alat/bahan/proses disambungkan; 20 tes baru lulus; lint/test/build lulus | uji manual browser oleh mahasiswa diperlukan sebelum merge PR
+2026-11-16 | Antigravity (agen) | fix-scene-3d | perbaikan scene 3D tidak terlihat & interaksi: mount layar main sekali & pembaruan UI in-place agar canvas tidak musnah tiap tick; auto-resize Three.js | 158 tes lulus, lint/build bersih

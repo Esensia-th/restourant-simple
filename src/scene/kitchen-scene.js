@@ -191,8 +191,13 @@ export function initKitchenScene(canvas, { onSelect, onHover } = {}) {
       mesh.material.emissiveIntensity = 0.35;
       mesh.position.y = mesh.userData.baseY + 0.15;
     } else if (!mesh.userData.selected) {
-      mesh.material.emissive.setHex(0x000000);
-      mesh.material.emissiveIntensity = 0;
+      if (mesh.userData.used) {
+        mesh.material.emissive.setHex(0x10B981);
+        mesh.material.emissiveIntensity = 0.4;
+      } else {
+        mesh.material.emissive.setHex(0x000000);
+        mesh.material.emissiveIntensity = 0;
+      }
       mesh.position.y = mesh.userData.baseY;
     }
   }
@@ -205,8 +210,13 @@ export function initKitchenScene(canvas, { onSelect, onHover } = {}) {
       mesh.material.emissiveIntensity = 0.55;
       mesh.position.y = mesh.userData.baseY + 0.3;
     } else {
-      mesh.material.emissive.setHex(0x000000);
-      mesh.material.emissiveIntensity = 0;
+      if (mesh.userData.used) {
+        mesh.material.emissive.setHex(0x10B981);
+        mesh.material.emissiveIntensity = 0.4;
+      } else {
+        mesh.material.emissive.setHex(0x000000);
+        mesh.material.emissiveIntensity = 0;
+      }
       mesh.position.y = mesh.userData.baseY;
     }
   }
@@ -214,6 +224,7 @@ export function initKitchenScene(canvas, { onSelect, onHover } = {}) {
   function onPointerMove(event) {
     if (isPaused) return;
     const rect = canvas.getBoundingClientRect();
+    if (!rect.width || !rect.height) return;
     mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
     mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
 
@@ -248,6 +259,7 @@ export function initKitchenScene(canvas, { onSelect, onHover } = {}) {
   function onPointerDown(event) {
     if (isPaused) return;
     const rect = canvas.getBoundingClientRect();
+    if (!rect.width || !rect.height) return;
     mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
     mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
 
@@ -276,22 +288,29 @@ export function initKitchenScene(canvas, { onSelect, onHover } = {}) {
   canvas.addEventListener('pointermove', onPointerMove);
   canvas.addEventListener('pointerdown', onPointerDown);
 
-  let animId = null;
-  function render() {
-    renderer.render(scene, camera);
-    animId = requestAnimationFrame(render);
-  }
-  render();
-
   function resize() {
     const w = canvas.clientWidth;
     const h = canvas.clientHeight;
-    if (w && h) {
+    if (w > 0 && h > 0) {
       camera.aspect = w / h;
       camera.updateProjectionMatrix();
       renderer.setSize(w, h, false);
     }
   }
+
+  window.addEventListener('resize', resize);
+
+  let animId = null;
+  function render() {
+    const w = canvas.clientWidth;
+    const h = canvas.clientHeight;
+    if (w > 0 && h > 0 && (canvas.width !== w || canvas.height !== h)) {
+      resize();
+    }
+    renderer.render(scene, camera);
+    animId = requestAnimationFrame(render);
+  }
+  render();
 
   /**
    * Memperbarui indikator progres proses pada alat yang sedang dipakai.
@@ -302,7 +321,11 @@ export function initKitchenScene(canvas, { onSelect, onHover } = {}) {
   function showProcessProgress(toolId, progress) {
     for (const obj of interactiveObjects) {
       if (obj.userData.type !== 'tool') continue;
-      if (obj.userData.id === toolId && progress > 0 && progress < 1) {
+      const isMatch = toolId && (
+        obj.userData.id === toolId ||
+        (toolId === 'kompor + penggorengan' && (obj.userData.id === 'kompor' || obj.userData.id === 'penggorengan'))
+      );
+      if (isMatch && progress > 0 && progress < 1) {
         // Warna kuning-oranye saat proses berjalan; intensitas naik seiring progres
         obj.material.emissive.setHex(0xF59E0B);
         obj.material.emissiveIntensity = 0.3 + progress * 0.4;
@@ -325,6 +348,7 @@ export function initKitchenScene(canvas, { onSelect, onHover } = {}) {
   function markIngredientUsed(ingredientId) {
     for (const obj of interactiveObjects) {
       if (obj.userData.type === 'ingredient' && obj.userData.id === ingredientId) {
+        obj.userData.used = true;
         obj.material.emissive.setHex(0x10B981);
         obj.material.emissiveIntensity = 0.4;
       }
@@ -337,6 +361,7 @@ export function initKitchenScene(canvas, { onSelect, onHover } = {}) {
   function resetIngredientMarks() {
     for (const obj of interactiveObjects) {
       if (obj.userData.type === 'ingredient') {
+        obj.userData.used = false;
         obj.material.emissive.setHex(0x000000);
         obj.material.emissiveIntensity = 0;
         obj.position.y = obj.userData.baseY;
@@ -367,6 +392,7 @@ export function initKitchenScene(canvas, { onSelect, onHover } = {}) {
     resize,
     destroy() {
       if (animId !== null) cancelAnimationFrame(animId);
+      window.removeEventListener('resize', resize);
       canvas.removeEventListener('pointermove', onPointerMove);
       canvas.removeEventListener('pointerdown', onPointerDown);
       renderer.dispose();

@@ -378,6 +378,8 @@ body {
   height: 380px;
   display: block;
   touch-action: none;
+  user-select: none;
+  cursor: default;
 }
 
 .scene-status-bar {
