@@ -361,6 +361,41 @@ body {
   }
 }
 
+/* Area Scene 3D Dapur */
+.scene-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.scene-canvas {
+  width: 100%;
+  height: 380px;
+  display: block;
+  touch-action: none;
+}
+
+.scene-status-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-2) var(--space-4);
+  background-color: var(--color-bg);
+  border-top: 1px solid var(--color-border-subtle);
+  font-size: var(--font-size-caption);
+  color: var(--color-text-muted);
+}
+
+.scene-status-item {
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
 /* Fokus keyboard terlihat (WCAG 2.2 AA) */
 :focus-visible {
   outline: 3px solid var(--color-focus);

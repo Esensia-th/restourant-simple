@@ -68,6 +68,7 @@ Isi satu baris setiap selesai menguji sebuah fitur satu putaran penuh (Start →
 | 2026-11-16 | T-006 | F1, F2 | M01 (Telur Goreng) | Sukses | Tidak ada | Layar awal tampil dengan tombol Start; klik Start berpindah ke pelanggan 1/10 dengan uang Rp0; layar hasil menang dan kalah menampilkan total uang dan tombol Main lagi yang mengembalikan permainan ke pelanggan 1/10 |
 | 2026-11-16 | T-007 | F4, F2 | M01 (Telur Goreng) | Sukses | Tidak ada | HUD menampilkan nomor pelanggan (mis. 1/10), timer hitung mundur dari 30s, total uang, dan tombol Pause/Resume; tombol Pause menghentikan timer dan menampilkan banner dijeda; Resume melanjutkan timer |
 | 2026-11-16 | T-008 | F2 | M01 (Telur Goreng) | Sukses | Tidak ada | Karakter pelanggan 2D gaya visual novel statis tampil beserta kotak dialog menyebut menu yang dipesan dengan kalimat santai; teks alt gambar aksesibel; pelanggan berganti sesuai urutan pesanan |
+| 2026-11-16 | T-009 | F3 | M01 (Telur Goreng) | Sukses | Tidak ada | Scene Three.js menampilkan 7 alat dan 9 bahan 3D secara prosedural; respon visual hover (sorotan biru & naik posisi) dan klik (sorotan hijau) berfungsi lancar; interaksi dinonaktifkan saat dijeda (Pause) |
 
 ## AI-Generated Code Checks
 
