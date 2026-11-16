@@ -424,6 +424,74 @@ body {
   min-width: 110px;
 }
 
+/* Piring Olahan / Meja Racik Hidangan (F3) */
+.dish-workbench {
+  width: 100%;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: var(--space-3) var(--space-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.dish-workbench-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: var(--font-size-caption);
+  color: var(--color-text-muted);
+}
+
+.dish-workbench-title {
+  color: var(--color-text);
+  font-weight: 700;
+  font-size: 15px;
+}
+
+.dish-workbench-steps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: center;
+  min-height: 36px;
+}
+
+.dish-step-empty {
+  font-size: var(--font-size-caption);
+  color: var(--color-text-muted);
+  font-style: italic;
+}
+
+.dish-step-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding: 3px 10px;
+  border-radius: 16px;
+  font-size: var(--font-size-caption);
+  font-weight: 600;
+}
+
+.dish-step-ingredient {
+  background-color: #ECFDF5;
+  color: #065F46;
+  border: 1px solid #10B981;
+}
+
+.dish-step-process {
+  background-color: #FEF3C7;
+  color: #92400E;
+  border: 1px solid #F59E0B;
+}
+
+.dish-step-active {
+  background-color: #EFF6FF;
+  color: #1E40AF;
+  border: 1px solid #3B82F6;
+}
+
 /* Fokus keyboard terlihat (WCAG 2.2 AA) */
 :focus-visible {
   outline: 3px solid var(--color-focus);

@@ -16,6 +16,7 @@ import {
   TOTAL_CUSTOMERS,
 } from './game/game-state.js';
 import { getProcessProgress } from './game/timer.js';
+import { MENU_CATALOG } from './game/menu-catalog.js';
 import {
   renderStartScreen,
   renderResultScreen,
@@ -65,9 +66,11 @@ let statusItemEl = null;
 let processBarEl = null;
 let processBarFillEl = null;
 let processLabelEl = null;
+let dishWorkbenchStepsEl = null;
+let dishWorkbenchCountEl = null;
 
 /**
- * Pemetaan alat 3D ke action proses (dari SPEC.json).
+ * Pemetaan fallback alat 3D ke action proses (dari SPEC.json).
  */
 const TOOL_ACTION_MAP = {
   'kompor': 'goreng',
@@ -86,6 +89,39 @@ const TOOL_INGREDIENT_MAP = {
   'wadah es batu': 'es batu',
   'galon air': 'air',
 };
+
+/**
+ * Menentukan aksi alat berdasarkan resep menu yang sedang dipesan pemain.
+ * @param {string} toolId
+ * @param {typeof state.order} order
+ * @returns {{ action: string, tool: string } | null}
+ */
+function getToolActionForOrder(toolId, order) {
+  if (order && order.menuId) {
+    const menu = MENU_CATALOG.find((m) => m.id === order.menuId);
+    if (menu) {
+      // Cari apakah ada langkah proses menu ini yang cocok dengan alat yang diklik
+      const matchedStep = menu.steps.find((s) => {
+        if (s.type !== 'process') return false;
+        if (toolId === 'kompor' || toolId === 'penggorengan') {
+          return s.tool.includes('kompor') || s.tool.includes('penggorengan');
+        }
+        return s.tool === toolId;
+      });
+      if (matchedStep) {
+        return { action: matchedStep.action, tool: matchedStep.tool };
+      }
+    }
+  }
+
+  // Fallback standar
+  const action = TOOL_ACTION_MAP[toolId];
+  if (!action) return null;
+  const toolKey = (toolId === 'kompor' || toolId === 'penggorengan')
+    ? 'kompor + penggorengan'
+    : toolId;
+  return { action, tool: toolKey };
+}
 
 /**
  * Menangani klik pada objek 3D dapur — disambungkan ke selectIngredient / beginProcess.
@@ -118,13 +154,9 @@ function handleSceneSelect(item) {
     }
 
     // Jalankan proses
-    const action = TOOL_ACTION_MAP[item.id];
-    if (action) {
-      let toolKey = item.id;
-      if (item.id === 'kompor' || item.id === 'penggorengan') {
-        toolKey = 'kompor + penggorengan';
-      }
-      const next = beginProcess(state, { action, tool: toolKey });
+    const processInfo = getToolActionForOrder(item.id, state.order);
+    if (processInfo) {
+      const next = beginProcess(state, processInfo);
       if (next !== state) {
         state = next;
         updateMainUI(state);
@@ -245,6 +277,42 @@ function updateMainUI(currentState) {
       }
     }
   }
+
+  // 5. Perbarui Piring Olahan (Daftar Bahan & Proses Saat Ini)
+  if (dishWorkbenchStepsEl && dishWorkbenchCountEl) {
+    dishWorkbenchStepsEl.textContent = '';
+    const steps = currentState.dish || [];
+    const hasActiveProcess = Boolean(currentState.order?.activeProcess);
+    const count = steps.length + (hasActiveProcess ? 1 : 0);
+    dishWorkbenchCountEl.textContent = `${count} langkah`;
+
+    if (steps.length === 0 && !hasActiveProcess) {
+      const emptySpan = document.createElement('span');
+      emptySpan.className = 'dish-step-empty';
+      emptySpan.textContent = 'Belum ada bahan atau proses. Klik bahan & alat 3D di bawah untuk mulai meracik!';
+      dishWorkbenchStepsEl.appendChild(emptySpan);
+    } else {
+      steps.forEach((step, idx) => {
+        const badge = document.createElement('span');
+        badge.className = `dish-step-badge ${step.type === 'ingredient' ? 'dish-step-ingredient' : 'dish-step-process'}`;
+        if (step.type === 'ingredient') {
+          badge.textContent = `${idx + 1}. Bahan: ${step.item}`;
+        } else {
+          badge.textContent = `${idx + 1}. Proses: ${step.action} (${step.tool})`;
+        }
+        dishWorkbenchStepsEl.appendChild(badge);
+      });
+
+      if (hasActiveProcess) {
+        const activeBadge = document.createElement('span');
+        activeBadge.className = 'dish-step-badge dish-step-active';
+        const ap = currentState.order.activeProcess;
+        const remaining = Math.max(0, Math.ceil(3 - (ap.elapsedSeconds || 0)));
+        activeBadge.textContent = `⏳ Memproses: ${ap.action}… ${remaining}s`;
+        dishWorkbenchStepsEl.appendChild(activeBadge);
+      }
+    }
+  }
 }
 
 /**
@@ -307,6 +375,8 @@ function stopGameLoop() {
   processBarEl = null;
   processBarFillEl = null;
   processLabelEl = null;
+  dishWorkbenchStepsEl = null;
+  dishWorkbenchCountEl = null;
 }
 
 /**
@@ -367,6 +437,32 @@ function mountMainScreen(root) {
     customerSectionEl = customerDialog;
     gameContainer.appendChild(customerDialog);
   }
+
+  // Meja Racik / Piring Olahan (F3)
+  const dishWorkbench = document.createElement('div');
+  dishWorkbench.className = 'dish-workbench';
+  dishWorkbench.setAttribute('data-testid', 'dish-workbench');
+
+  const dishHeader = document.createElement('div');
+  dishHeader.className = 'dish-workbench-header';
+  const dishTitle = document.createElement('span');
+  dishTitle.className = 'dish-workbench-title';
+  dishTitle.textContent = 'Piring Olahan (Langkah Saat Ini)';
+  const dishCount = document.createElement('span');
+  dishCount.className = 'dish-workbench-count';
+  dishHeader.appendChild(dishTitle);
+  dishHeader.appendChild(dishCount);
+  dishWorkbench.appendChild(dishHeader);
+
+  const dishStepsContainer = document.createElement('div');
+  dishStepsContainer.className = 'dish-workbench-steps';
+  dishStepsContainer.setAttribute('data-testid', 'dish-workbench-steps');
+  dishWorkbench.appendChild(dishStepsContainer);
+
+  gameContainer.appendChild(dishWorkbench);
+
+  dishWorkbenchStepsEl = dishStepsContainer;
+  dishWorkbenchCountEl = dishCount;
 
   // Scene 3D Alat dan Bahan (F3)
   const sceneContainer = document.createElement('div');
@@ -432,6 +528,7 @@ function mountMainScreen(root) {
     kitchenSceneController.setPaused(state.paused);
   }
 
+  updateMainUI(state);
   startGameLoop(root);
 }
 
