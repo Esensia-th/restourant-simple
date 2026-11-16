@@ -268,6 +268,99 @@ body {
   font-weight: 700;
 }
 
+/* Komponen Pelanggan 2D & Dialog Pesanan (F2) */
+.customer-section {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--space-4);
+  width: 100%;
+  background: linear-gradient(180deg, rgba(241, 245, 249, 0.5) 0%, rgba(241, 245, 249, 0.9) 100%);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 8px;
+  padding: var(--space-4);
+  position: relative;
+}
+
+.customer-avatar-box {
+  flex-shrink: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  background-color: #FFFFFF;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: var(--space-2);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.customer-avatar-img {
+  display: block;
+  max-width: 140px;
+  height: auto;
+}
+
+.customer-dialog-bubble {
+  flex: 1;
+  background-color: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: var(--space-4);
+  position: relative;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* Segitiga panah balon bicara menunjuk ke avatar */
+.customer-dialog-bubble::before {
+  content: '';
+  position: absolute;
+  left: -10px;
+  bottom: 24px;
+  width: 0;
+  height: 0;
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+  border-right: 10px solid var(--color-border);
+}
+
+.customer-dialog-bubble::after {
+  content: '';
+  position: absolute;
+  left: -8px;
+  bottom: 24px;
+  width: 0;
+  height: 0;
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+  border-right: 9px solid var(--color-bg);
+}
+
+.customer-speaker-name {
+  font-size: var(--font-size-caption);
+  font-weight: 700;
+  color: var(--color-primary);
+  margin-bottom: var(--space-1);
+}
+
+.customer-speech-text {
+  font-size: var(--font-size-body);
+  font-weight: 500;
+  color: var(--color-text);
+  line-height: 1.4;
+}
+
+/* Responsif: layar sempit */
+@media (max-width: 600px) {
+  .customer-section {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .customer-dialog-bubble::before,
+  .customer-dialog-bubble::after {
+    display: none;
+  }
+}
+
 /* Fokus keyboard terlihat (WCAG 2.2 AA) */
 :focus-visible {
   outline: 3px solid var(--color-focus);

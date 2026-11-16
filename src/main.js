@@ -18,6 +18,7 @@ import {
   renderResultScreen,
 } from './ui/screens.js';
 import { renderHUD } from './ui/hud.js';
+import { renderCustomerDialog } from './ui/customer-dialog.js';
 
 /**
  * State aplikasi lokal di memori.
@@ -137,14 +138,14 @@ function renderApp(root) {
       gameContainer.appendChild(pausedBanner);
     }
 
-    // Area konten permainan (dialog pelanggan & scene 3D, dilengkapi di T-008 & T-009)
-    const info = document.createElement('p');
-    info.className = 'screen-desc';
-    info.setAttribute('data-testid', 'game-info');
-    info.textContent = state.order
-      ? `Pesanan aktif: ${state.order.menuId} (menunggu racikan)`
-      : 'Menunggu pesanan...';
-    gameContainer.appendChild(info);
+    // Pelanggan 2D dan Dialog Pesanan (F2)
+    if (state.order) {
+      const customerDialog = renderCustomerDialog({
+        customerNumber: state.customerNumber,
+        menuId: state.order.menuId,
+      });
+      gameContainer.appendChild(customerDialog);
+    }
 
     root.appendChild(gameContainer);
   }

@@ -19,6 +19,19 @@ class MockElement {
     this.textContent = '';
     this._listeners = {};
     this.type = '';
+    return new Proxy(this, {
+      set(target, prop, value) {
+        target[prop] = value;
+        if (typeof prop === 'string') {
+          target.attributes[prop] = String(value);
+        }
+        return true;
+      },
+      get(target, prop) {
+        if (prop in target) return target[prop];
+        return target.attributes[prop] ?? undefined;
+      },
+    });
   }
 
   setAttribute(name, value) {

@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 240" width="200" height="240" role="img" aria-label="Karakter Pelanggan 3">
+  <!-- Rambut Panjang -->
+  <path d="M 46 90 Q 40 180 60 210 Q 75 160 70 120 L 130 120 Q 125 160 140 210 Q 160 180 154 90 Z" fill="#831843" />
+  <!-- Badan / Baju -->
+  <path d="M 40 230 C 40 160, 70 145, 100 145 C 130 145, 160 160, 160 230 Z" fill="#EC4899" />
+  <!-- Pita / Aksesoris -->
+  <circle cx="100" cy="155" r="8" fill="#FDE047" />
+  <!-- Leher -->
+  <rect x="90" y="125" width="20" height="25" fill="#FED7AA" />
+  <!-- Wajah / Kepala -->
+  <ellipse cx="100" cy="95" rx="36" ry="42" fill="#FFEDD5" />
+  <!-- Rambut Poni -->
+  <path d="M 64 85 Q 100 65 136 85 Q 115 65 100 68 Q 85 65 64 85 Z" fill="#9D174D" />
+  <!-- Mata Berbinar -->
+  <circle cx="86" cy="95" r="4.5" fill="#1F2937" />
+  <circle cx="87.5" cy="93.5" r="1.5" fill="#FFFFFF" />
+  <circle cx="114" cy="95" r="4.5" fill="#1F2937" />
+  <circle cx="115.5" cy="93.5" r="1.5" fill="#FFFFFF" />
+  <!-- Pipi Merona -->
+  <circle cx="76" cy="105" r="7" fill="#F472B6" opacity="0.6" />
+  <circle cx="124" cy="105" r="7" fill="#F472B6" opacity="0.6" />
+  <!-- Senyum Ceria -->
+  <path d="M 92 113 Q 100 122 108 113" stroke="#9F1239" stroke-width="2.5" fill="none" stroke-linecap="round" />
+</svg>

@@ -14,6 +14,7 @@ import {
 } from '../src/game/game-state.js';
 import { renderStartScreen, renderResultScreen } from '../src/ui/screens.js';
 import { renderHUD } from '../src/ui/hud.js';
+import { renderCustomerDialog } from '../src/ui/customer-dialog.js';
 
 describe('Integrasi Alur Aplikasi (F1, F2, F4)', () => {
   let cleanup;
@@ -80,6 +81,14 @@ describe('Integrasi Alur Aplikasi (F1, F2, F4)', () => {
 
         gameContainer.appendChild(hud);
 
+        if (state.order) {
+          const customerDialog = renderCustomerDialog({
+            customerNumber: state.customerNumber,
+            menuId: state.order.menuId,
+          });
+          gameContainer.appendChild(customerDialog);
+        }
+
         if (state.paused) {
           const pausedBanner = document.createElement('div');
           pausedBanner.setAttribute('data-testid', 'paused-banner');
@@ -107,6 +116,13 @@ describe('Integrasi Alur Aplikasi (F1, F2, F4)', () => {
     expect(root.querySelector('[data-testid="hud-customer-value"]').textContent).toBe('1/10');
     expect(root.querySelector('[data-testid="hud-timer-value"]').textContent).toBe('30s');
     expect(root.querySelector('[data-testid="hud-money-value"]').textContent).toBe('Rp0');
+
+    // Cek Pelanggan 2D & Dialog Pesanan
+    const customerSection = root.querySelector('[data-testid="customer-section"]');
+    expect(customerSection).not.toBeNull();
+    expect(root.querySelector('[data-testid="customer-avatar"]')).not.toBeNull();
+    expect(root.querySelector('[data-testid="customer-speaker-name"]').textContent).toBe('Pelanggan #1');
+    expect(root.querySelector('[data-testid="customer-speech-text"]').textContent).toContain('Telur Goreng');
 
     // 3. Uji tombol Pause di HUD
     const pauseBtn = root.querySelector('[data-testid="btn-pause"]');
