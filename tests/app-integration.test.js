@@ -178,4 +178,46 @@ describe('Integrasi Alur Aplikasi (F1, F2, F4)', () => {
     expect(root.querySelector('[data-testid="result-money"]').textContent).toBe('Rp185.000');
     expect(root.querySelector('[data-testid="btn-play-again"]')).not.toBeNull();
   });
+
+  it('alur piring olahan dan penilaian pesanan: bahan masuk, disajikan benar, uang bertambah', async () => {
+    let state = startGame(createGameState(), 'M01'); // Telur Goreng: telur, garam, proses goreng (kompor)
+    expect(state.screen).toBe('main');
+
+    // Buat wadah game dengan tombol sajikan
+    const sajikanBtn = document.createElement('button');
+    sajikanBtn.setAttribute('data-testid', 'btn-sajikan');
+    sajikanBtn.textContent = 'Sajikan';
+    root.appendChild(sajikanBtn);
+
+    // Pemain memilih telur, garam, dan goreng
+    state = {
+      ...state,
+      dish: [
+        { type: 'ingredient', item: 'telur' },
+        { type: 'ingredient', item: 'garam' },
+        { type: 'process', action: 'goreng', tool: 'kompor + penggorengan', duration_seconds: 3 },
+      ],
+    };
+
+    // Saat tombol sajikan ditekan dengan hidangan benar
+    const { serve } = await import('../src/game/game-state.js');
+    const served = serve(state);
+    expect(served.order.status).toBe('terlayani');
+    expect(served.totalMoneyIdr).toBe(7000); // Harga Telur Goreng Rp7.000
+  });
+
+  it('alur penilaian pesanan salah: menyajikan hidangan tidak sesuai resep langsung kalah', async () => {
+    const state = {
+      ...startGame(createGameState(), 'M01'),
+      dish: [
+        { type: 'ingredient', item: 'roti' }, // Salah bahan
+      ],
+    };
+
+    const { serve } = await import('../src/game/game-state.js');
+    const served = serve(state);
+    expect(served.screen).toBe('hasil');
+    expect(served.result).toBe('kalah');
+    expect(served.order.status).toBe('pergi');
+  });
 });
