@@ -11,8 +11,11 @@ import {
   pauseGame,
   resumeGame,
   tickGame,
+  selectIngredient,
+  beginProcess,
   TOTAL_CUSTOMERS,
 } from './game/game-state.js';
+import { getProcessProgress } from './game/timer.js';
 import {
   renderStartScreen,
   renderResultScreen,
@@ -38,7 +41,78 @@ let animationFrameId = null;
 let lastTimestamp = 0;
 
 /**
+ * Elemen DOM indikator progres proses (diperbarui setiap frame tanpa re-render).
+ */
+let processBarEl = null;
+let processBarFillEl = null;
+let processLabelEl = null;
+
+/**
+ * Pemetaan alat 3D ke action proses (dari SPEC.json).
+ * Alat dengan beberapa kemungkinan aksi dipilih aksi utamanya.
+ */
+const TOOL_ACTION_MAP = {
+  'kompor': 'goreng',
+  'penggorengan': 'goreng',
+  'spatula': 'aduk',
+  'alat pembuat kopi': 'seduh',
+  'wadah es batu': null,
+  'galon air': null,
+  'blender buah': 'blender',
+};
+
+/**
+ * Alat yang menambah bahan, bukan menjalankan proses.
+ */
+const TOOL_INGREDIENT_MAP = {
+  'wadah es batu': 'es batu',
+  'galon air': 'air',
+};
+
+/**
+ * Menangani klik pada objek 3D dapur — disambungkan ke selectIngredient / beginProcess.
+ * @param {{ id: string, name: string, type: 'tool' | 'ingredient' }} item
+ */
+function handleSceneSelect(item) {
+  if (!item) return;
+
+  if (item.type === 'ingredient') {
+    const next = selectIngredient(state, item.id);
+    if (next !== state) {
+      state = next;
+      if (kitchenSceneController) kitchenSceneController.markIngredientUsed(item.id);
+    }
+    return;
+  }
+
+  if (item.type === 'tool') {
+    // Cek apakah alat ini menambah bahan
+    const ingredientId = TOOL_INGREDIENT_MAP[item.id];
+    if (ingredientId) {
+      const next = selectIngredient(state, ingredientId);
+      if (next !== state) {
+        state = next;
+        if (kitchenSceneController) kitchenSceneController.markIngredientUsed(ingredientId);
+      }
+      return;
+    }
+
+    // Jalankan proses
+    const action = TOOL_ACTION_MAP[item.id];
+    if (action) {
+      // Kompor dan penggorengan pakai tool key gabungan sesuai resep
+      let toolKey = item.id;
+      if (item.id === 'kompor' || item.id === 'penggorengan') {
+        toolKey = 'kompor + penggorengan';
+      }
+      state = beginProcess(state, { action, tool: toolKey });
+    }
+  }
+}
+
+/**
  * Loop waktu permainan (F4): memajukan jam game secara halus dengan requestAnimationFrame.
+ * Juga memperbarui indikator progres proses tanpa re-render penuh.
  * @param {number} timestamp
  * @param {HTMLElement} root
  */
@@ -56,6 +130,30 @@ function gameLoop(timestamp, root) {
         renderApp(root);
       }
     }
+
+    // Perbarui indikator progres proses setiap frame (tanpa full re-render)
+    if (state.order && kitchenSceneController) {
+      const progress = getProcessProgress(state.order);
+      const activeTool = state.order.activeProcess ? state.order.activeProcess.tool : null;
+      // Dapatkan id alat dari tool key (misalnya "kompor + penggorengan" → "kompor")
+      let toolId = null;
+      if (activeTool) {
+        toolId = activeTool === 'kompor + penggorengan' ? 'kompor' : activeTool;
+      }
+      kitchenSceneController.showProcessProgress(toolId, progress);
+
+      // Perbarui process bar HTML jika ada
+      if (processBarEl && processBarFillEl && processLabelEl) {
+        if (activeTool && progress > 0 && progress < 1) {
+          processBarEl.style.display = 'flex';
+          processBarFillEl.style.width = `${Math.round(progress * 100)}%`;
+          processLabelEl.textContent = `Memproses… ${Math.ceil((1 - progress) * 3)} detik`;
+        } else {
+          processBarEl.style.display = 'none';
+        }
+      }
+    }
+
     animationFrameId = requestAnimationFrame((ts) => gameLoop(ts, root));
   } else {
     stopGameLoop();
@@ -77,6 +175,9 @@ function stopGameLoop() {
     kitchenSceneController.destroy();
     kitchenSceneController = null;
   }
+  processBarEl = null;
+  processBarFillEl = null;
+  processLabelEl = null;
 }
 
 /**
@@ -168,6 +269,19 @@ function renderApp(root) {
     canvas.setAttribute('aria-label', 'Area Dapur 3D: Alat dan Bahan');
     sceneContainer.appendChild(canvas);
 
+    // Indikator progres proses 3 detik (F3, F4)
+    const processBar = document.createElement('div');
+    processBar.className = 'process-bar';
+    processBar.setAttribute('data-testid', 'process-bar');
+    processBar.style.display = 'none';
+    const processBarFill = document.createElement('div');
+    processBarFill.className = 'process-bar-fill';
+    processBar.appendChild(processBarFill);
+    const processLabel = document.createElement('span');
+    processLabel.className = 'process-bar-label';
+    processBar.appendChild(processLabel);
+    sceneContainer.appendChild(processBar);
+
     const statusBar = document.createElement('div');
     statusBar.className = 'scene-status-bar';
     const statusHint = document.createElement('span');
@@ -182,6 +296,11 @@ function renderApp(root) {
     gameContainer.appendChild(sceneContainer);
     root.appendChild(gameContainer);
 
+    // Simpan referensi elemen progres untuk diperbarui di game loop
+    processBarEl = processBar;
+    processBarFillEl = processBarFill;
+    processLabelEl = processLabel;
+
     // Inisialisasi Scene Three.js
     if (!kitchenSceneController) {
       kitchenSceneController = initKitchenScene(canvas, {
@@ -194,6 +313,7 @@ function renderApp(root) {
         },
         onSelect: (item) => {
           statusItem.textContent = `Dipilih: ${item.name}`;
+          handleSceneSelect(item);
         },
       });
     }

@@ -69,6 +69,7 @@ Isi satu baris setiap selesai menguji sebuah fitur satu putaran penuh (Start →
 | 2026-11-16 | T-007 | F4, F2 | M01 (Telur Goreng) | Sukses | Tidak ada | HUD menampilkan nomor pelanggan (mis. 1/10), timer hitung mundur dari 30s, total uang, dan tombol Pause/Resume; tombol Pause menghentikan timer dan menampilkan banner dijeda; Resume melanjutkan timer |
 | 2026-11-16 | T-008 | F2 | M01 (Telur Goreng) | Sukses | Tidak ada | Karakter pelanggan 2D gaya visual novel statis tampil beserta kotak dialog menyebut menu yang dipesan dengan kalimat santai; teks alt gambar aksesibel; pelanggan berganti sesuai urutan pesanan |
 | 2026-11-16 | T-009 | F3 | M01 (Telur Goreng) | Sukses | Tidak ada | Scene Three.js menampilkan 7 alat dan 9 bahan 3D secara prosedural; respon visual hover (sorotan biru & naik posisi) dan klik (sorotan hijau) berfungsi lancar; interaksi dinonaktifkan saat dijeda (Pause) |
+| 2026-11-16 | T-010 | F3, F4 | M01 (Telur Goreng), M06 (Kopi Hitam), M07 (Jus Buah) | Sukses (uji kode) | Tidak ada | Interaksi bahan 3D → selectIngredient dipanggil, bahan ditandai hijau di scene; klik kompor/penggorengan → goreng\|kompor+penggorengan dimulai, progress bar muncul dan bertambah setiap frame, menghilang setelah 3 detik; proses berhenti saat Pause (setPaused menonaktifkan raycaster); gabungan di luar resep tidak error dan tercatat di dish. 20 tes interaction.test.js lulus. Uji manual di browser oleh mahasiswa diperlukan sebelum merge. |
 
 ## AI-Generated Code Checks
 

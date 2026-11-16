@@ -293,11 +293,65 @@ export function initKitchenScene(canvas, { onSelect, onHover } = {}) {
     }
   }
 
+  /**
+   * Memperbarui indikator progres proses pada alat yang sedang dipakai.
+   * progress: 0 (belum mulai) sampai 1 (selesai).
+   * @param {string | null} toolId — id alat yang sedang memproses, null jika tidak ada
+   * @param {number} progress — 0 sampai 1
+   */
+  function showProcessProgress(toolId, progress) {
+    for (const obj of interactiveObjects) {
+      if (obj.userData.type !== 'tool') continue;
+      if (obj.userData.id === toolId && progress > 0 && progress < 1) {
+        // Warna kuning-oranye saat proses berjalan; intensitas naik seiring progres
+        obj.material.emissive.setHex(0xF59E0B);
+        obj.material.emissiveIntensity = 0.3 + progress * 0.4;
+        obj.position.y = obj.userData.baseY + 0.08 * progress;
+      } else {
+        // Kembalikan ke normal jika bukan alat aktif atau proses selesai
+        if (!obj.userData.selected && obj !== hoveredObject) {
+          obj.material.emissive.setHex(0x000000);
+          obj.material.emissiveIntensity = 0;
+          obj.position.y = obj.userData.baseY;
+        }
+      }
+    }
+  }
+
+  /**
+   * Menandai bahan sebagai sudah dipakai dengan perubahan warna visual.
+   * @param {string} ingredientId
+   */
+  function markIngredientUsed(ingredientId) {
+    for (const obj of interactiveObjects) {
+      if (obj.userData.type === 'ingredient' && obj.userData.id === ingredientId) {
+        obj.material.emissive.setHex(0x10B981);
+        obj.material.emissiveIntensity = 0.4;
+      }
+    }
+  }
+
+  /**
+   * Mereset semua tanda visual bahan (misalnya saat pelanggan baru datang).
+   */
+  function resetIngredientMarks() {
+    for (const obj of interactiveObjects) {
+      if (obj.userData.type === 'ingredient') {
+        obj.material.emissive.setHex(0x000000);
+        obj.material.emissiveIntensity = 0;
+        obj.position.y = obj.userData.baseY;
+      }
+    }
+  }
+
   return {
     scene,
     camera,
     renderer,
     interactiveObjects,
+    showProcessProgress,
+    markIngredientUsed,
+    resetIngredientMarks,
     setPaused(paused) {
       isPaused = Boolean(paused);
       if (isPaused) {
